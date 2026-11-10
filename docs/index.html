@@ -131,12 +131,13 @@ footer { margin-top: 64px; padding-top: 18px; border-top: 2px solid var(--ink); 
 <main>
   <header>
     <h1>ICLR 2027 Rebuttal Radar</h1>
-    <p class="meta">A rebuttal-period extension of <a href="https://shiqiangw.github.io/iclr-2027-scores/">ICLR 2027 Scores</a> by shiqiangw. <span id="updated">Loading data…</span></p>
+    <p class="meta">A rebuttal-period extension of <a href="https://shiqiangw.github.io/iclr-2027-scores/">ICLR 2027 Scores</a> by shiqiangw.</p>
+    <p class="meta" id="updated">Loading data…</p>
   </header>
 
   <div id="lookup">
     <h2><label for="q">Where does my paper stand now?</label></h2>
-    <p class="how">Type your paper number or a few words from the title. Nothing you type leaves this page.</p>
+    <p class="how">Type your paper number or a few words from the title. What you type is not sent anywhere.</p>
     <div class="field">
       <input id="q" type="search" autocomplete="off" placeholder="Paper number or title words" aria-controls="suggest">
       <ul id="suggest"></ul>
@@ -199,13 +200,15 @@ footer { margin-top: 64px; padding-top: 18px; border-top: 2px solid var(--ink); 
 
   <footer>
     <p><strong>Credit.</strong> This site is built on <a href="https://github.com/shiqiangw/iclr-2027-scores">iclr-2027-scores</a> by shiqiangw, who made the original <a href="https://shiqiangw.github.io/iclr-2027-scores/">ICLR 2027 Scores</a> page, the data pipeline, and the first snapshot. The rebuttal sections were added in this <a href="https://github.com/dipta007/iclr-2027-rebuttal-radar">fork</a>.</p>
-    <p><strong>What is counted.</strong> Only official reviews and their overall rating. <span id="footCounts"></span> Withdrawn and desk-rejected papers are not listed. The page shows paper titles, numeric scores, and OpenReview links only.</p>
+    <p><strong>What is counted.</strong> Only official reviews and their overall rating. <span id="footCounts"></span> Withdrawn and desk-rejected papers are not listed. The page shows paper titles, numeric scores, and OpenReview links only. Visits are counted with Cloudflare Web Analytics, which uses no cookies. The paper you look up is not part of that count.</p>
     <p><strong>Limits.</strong> A changed score is found by comparing each paper's sorted scores, so two opposite changes on one paper can hide each other. Past-year rates describe what happened to similar papers. They are not a prediction for any paper. Data comes from the OpenReview API and updates every 12 hours. Past-year numbers are built from the public data of <a href="https://github.com/papercopilot/iclr-insights">Paper Copilot</a>.</p>
   </footer>
 </main>
 <div id="tip" role="status"></div>
 <script>
 "use strict";
+// The paper number lives in the #fragment, which is never sent to a server or to analytics.
+{ const old = new URLSearchParams(location.search).get("paper"); if (old) history.replaceState(null, "", location.pathname + "#paper=" + encodeURIComponent(old)); }
 const $ = id => document.getElementById(id), SVG = "http://www.w3.org/2000/svg", PAGE = 25;
 const fmt = n => n == null ? "–" : n.toLocaleString("en-US");
 const pc = (x, d = 1) => (x * 100).toFixed(d) + "%";
@@ -260,7 +263,7 @@ function renderHeader() {
   const taken = new Date(LAST.taken_at), today = new Date();
   let next = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate(), 0, 10));
   while (next <= today) next = new Date(next.getTime() + 12 * 3600e3);
-  $("updated").textContent = `Scores as of ${stamp(taken)}. Next update around ${stamp(next)}, your time.`;
+  $("updated").replaceChildren(`Scores as of ${stamp(taken)}, your time.`, h("br"), `Next update around ${stamp(next)}, your time.`);
   document.querySelectorAll(".first-date").forEach(n => { n.textContent = day(FIRST.taken_at); });
 }
 
@@ -465,7 +468,7 @@ function pastYears(r) {
 function showPaper(p) {
   SHOWN = p;
   const box = $("result"), firstMean = meanOf(p.first), has = p.ratings.length > 0;
-  const url = new URL(location.href); url.searchParams.set("paper", p.number); history.replaceState(null, "", url);
+  history.replaceState(null, "", location.pathname + "#paper=" + p.number);
   if (!has) { box.replaceChildren(h("h3", {}, `#${p.number} ${p.title}`), h("p", {}, "This paper has no review scores yet.")); return; }
   const now = rankRange(LAST.mean_distribution, p.mean);
   const first = firstMean != null ? rankRange(FIRST.mean_distribution, firstMean) : null;
@@ -523,7 +526,7 @@ function setupLookup() {
   }
   q.addEventListener("input", suggest);
   q.addEventListener("keydown", e => { if (e.key === "Enter") { const b = list.querySelector("button"); if (b) b.click(); } });
-  const asked = +new URLSearchParams(location.search).get("paper");
+  const asked = +new URLSearchParams(location.hash.slice(1)).get("paper");
   if (asked) { const p = PAPERS.find(x => x.number === asked); q.value = String(asked); if (p) showPaper(p); else suggest(); }
 }
 
@@ -558,5 +561,6 @@ const load = name => fetch(`data/${name}.json`, { cache: "no-cache" }).then(r =>
   }
 })();
 </script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "5a79c85b059b4a7da1f198efaf6434c8", "spa": false}'></script>
 </body>
 </html>

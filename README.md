@@ -22,6 +22,8 @@ This project is a fork of [iclr-2027-scores](https://github.com/shiqiangw/iclr-2
 
 Only paper numbers, titles, OpenReview forum ids, and numeric scores. Review text, abstracts, authors, and reviewer ids are never copied, and `check_output()` in `build_site.py` stops the build if any other text reaches the page data. Withdrawn and desk-rejected papers are not listed.
 
+Visits are counted with Cloudflare Web Analytics (no cookies). The looked-up paper number is kept in the `#` part of the address, which is not sent to any server.
+
 Raw downloads hold review text. They stay in `snapshots/`, which git ignores. Per-paper summaries of each snapshot stay in `state/`, which git also ignores, so papers that later withdraw are not listed anywhere in the published data. Keep `state/`: the first-day summary in it is what every later update is compared with.
 
 ## How it is counted
