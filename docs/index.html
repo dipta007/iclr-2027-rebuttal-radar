@@ -13,14 +13,14 @@
   color-scheme: light;
   --page: #f3f5f8; --card: #ffffff; --line: #d9dee6; --grid: #e8ecf1; --track: #e3e8ef;
   --ink: #14202e; --ink-2: #47566a; --ink-3: #6b7a8d;
-  --up: #2a78d6; --down: #eb6834; --then: #8a97a8; --focus: #14202e; --link: #1c5cab;
+  --up: #2a78d6; --down: #eb6834; --out: #e34948; --then: #8a97a8; --focus: #14202e; --link: #1c5cab;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
     --page: #10161d; --card: #19212b; --line: #2e3947; --grid: #263140; --track: #263140;
     --ink: #eef2f6; --ink-2: #b9c4d1; --ink-3: #8d9aab;
-    --up: #3987e5; --down: #d95926; --then: #7c899a; --focus: #eef2f6; --link: #86b6ef;
+    --up: #3987e5; --down: #d95926; --out: #e66767; --then: #7c899a; --focus: #eef2f6; --link: #86b6ef;
   }
 }
 * { box-sizing: border-box; }
@@ -89,6 +89,7 @@ tbody tr:last-child td { border-bottom: 0; }
 .bars .track { height: 18px; background: var(--track); border-radius: 4px; overflow: hidden; }
 .bars .fill { height: 100%; background: var(--then); border-radius: 0 4px 4px 0; min-width: 2px; }
 .bars .fill.now { background: var(--up); }
+.bars .fill.out { background: var(--out); }
 .bars .v { font-variant-numeric: tabular-nums; color: var(--ink); }
 
 /* charts */
@@ -187,7 +188,10 @@ footer { margin-top: 64px; padding-top: 18px; border-top: 2px solid var(--ink); 
     <h2>Which scores move</h2>
     <p class="how">Read each row from left to right: of the reviews that gave this score at the start, how many give each score now.</p>
     <div class="card wrap"><table class="matrix" id="matrix"></table></div>
-    <h3 style="margin-top:28px">Papers that left, by starting score</h3>
+  </section>
+
+  <section id="withdrawn">
+    <h2>Papers that are withdrawn, by starting score</h2>
     <p class="how">The share of papers in each score group that were withdrawn or desk-rejected since <span class="first-date">the first snapshot</span>. Low-scored papers leave more often, which pushes every other paper's rank down a little.</p>
     <div class="card"><div class="bars" id="leftBars"></div></div>
   </section>
@@ -308,16 +312,16 @@ function trendChart(host, snaps) {
 }
 
 function barRows(host, rows, max) {
-  host.replaceChildren(...rows.flatMap(([label, share, text, now]) => [
+  host.replaceChildren(...rows.flatMap(([label, share, text, kind]) => [
     h("span", {}, label),
-    h("div", { class: "track" }, h("div", { class: "fill" + (now ? " now" : ""), style: `width:${Math.min(100, 100 * share / max)}%` })),
+    h("div", { class: "track" }, h("div", { class: "fill" + (kind ? " " + kind : ""), style: `width:${Math.min(100, 100 * share / max)}%` })),
     h("span", { class: "v" }, text),
   ]));
 }
 
 function renderExpect() {
   const m = LAST.movement, nowShare = m.reviews_paired ? m.reviews_raised / m.reviews_paired : 0;
-  const rows = [["ICLR 2027 so far", nowShare, `${pc(nowShare, 2)} (${fmt(m.reviews_raised)} reviews)`, true]];
+  const rows = [["ICLR 2027 so far", nowShare, `${pc(nowShare, 2)} (${fmt(m.reviews_raised)} reviews)`, "now"]];
   if (HISTORY) for (const y of Object.keys(HISTORY.years)) {
     const d = HISTORY.years[y], s = d.reviews_raised / d.reviews_paired;
     rows.push([`ICLR ${y}, final`, s, pc(s)]);
@@ -371,7 +375,7 @@ function renderWhich() {
   t.replaceChildren(h("thead", {}, head), h("tbody", {}, ...body));
   const bands = LAST.movement.left_by_band, rows = SITE.bands.map((name, i) => {
     const [left, total] = bands[i], s = total ? left / total : 0;
-    return [`Mean ${name}`, s, `${pc(s)} (${fmt(left)} of ${fmt(total)})`, true];
+    return [`Mean ${name}`, s, `${pc(s)} (${fmt(left)} of ${fmt(total)})`, "out"];
   });
   barRows($("leftBars"), rows, Math.max(...rows.map(r => r[1]), .01) * 1.05);
 }
