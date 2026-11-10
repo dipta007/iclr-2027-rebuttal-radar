@@ -14,6 +14,7 @@ if [ -z "$DRY" ]; then
   set +u; set -a; source .env; set +a; set -u
   [ "$(git rev-parse --abbrev-ref HEAD)" = main ] || { echo "not on main, stopping"; exit 1; }
   [ -z "$(git log origin/main..HEAD --oneline)" ] || { echo "main has commits that are not pushed, stopping"; exit 1; }
+  git pull -q --ff-only origin main
   export OPENREVIEW_USERNAME="$EMAIL" OPENREVIEW_PASSWORD="$PASSWORD"
   "${PY[@]}" download.py --new
   "${PY[@]}" build_site.py
