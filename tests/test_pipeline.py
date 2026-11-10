@@ -9,8 +9,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import build_site
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
+import build_history
 import download
-import import_notes
 
 VENUE = "ICLR.cc/2027/Conference"
 CANARY = "CANARYREVIEWTEXT"
@@ -132,7 +133,8 @@ class Pipeline(unittest.TestCase):
         self.assertEqual(build_site.main(["--snapshots", str(self.out), "--docs", str(self.docs)]), 1)
 
     def build(self):
-        self.assertEqual(build_site.main(["--snapshots", str(self.out), "--docs", str(self.docs)]), 0)
+        self.assertEqual(build_site.main(["--snapshots", str(self.out), "--docs", str(self.docs), "--state", str(self.root / "state")]), 0)
+        self.assertEqual(list((self.docs / "data").glob("snapshots/*")), [])
         return (json.loads((self.docs / "data/site.json").read_text()),
                 json.loads((self.docs / "data/papers.json").read_text()))
 
@@ -181,26 +183,66 @@ class Pipeline(unittest.TestCase):
         self.assertEqual(len(site["snapshots"]), 2)
         row = [r for r in papers["rows"] if r[0] == 1][0]
         self.assertEqual(row[3], [10, 10, 10])
-        self.assertAlmostEqual(row[5], first_mean, places=3)
+        self.assertEqual(papers["columns"][-1], "first_ratings")
+        self.assertAlmostEqual(sum(row[5]) / 3, first_mean, places=3)
+        self.assertNotEqual(row[5], row[3])
+        moved = site["snapshots"][-1]["movement"]
+        self.assertEqual((moved["up"], moved["down"], moved["left"]), (1, 0, 0))
+        self.assertEqual(site["snapshots"][0]["movement"]["up"], 0)
+        self.assertEqual(len(site["bands"]), 5)
+        blob = "".join(p.read_text() for p in self.docs.rglob("*.json"))
+        for banned in (CANARY, ABSTRACT, AUTHOR):
+            self.assertNotIn(banned, blob)
 
-    def save_pages(self, pages):
-        folder = self.root / "notes"
-        folder.mkdir()
-        for index, raws in enumerate(pages):
-            (folder / f"notes{index}.json").write_text(
-                json.dumps({"notes": raws, "count": len(self.raws)}))
-        return ["--notes", str(folder), "--out", str(self.out)]
+    def test_one_snapshot_first_ratings_equal_now(self):
+        run_download(self.out, FakeClient(self.raws))
+        site, papers = self.build()
+        row = [r for r in papers["rows"] if r[0] == 1][0]
+        self.assertEqual(row[5], row[3])
+        self.assertEqual(site["snapshots"][0]["movement"]["left"], 0)
 
-    def test_import_complete_pages(self):
-        args = self.save_pages([self.raws[:10], self.raws[10:20], self.raws[20:]])
-        self.assertEqual(import_notes.main(args), 0)
-        self.assertTrue(self.only_manifest()["complete"])
-        self.assertEqual(self.build()[0]["snapshots"][-1]["active"], 24)
+    def test_classify(self):
+        self.assertEqual(build_site.classify([3, 2, 2], [3, 3, 2]), "up")
+        self.assertEqual(build_site.classify([3, 2, 2], [2, 2, 2]), "down")
+        self.assertEqual(build_site.classify([3, 2, 2], [2, 3, 2]), "same")
+        self.assertEqual(build_site.classify([3, 2, 2], [3, 2, 2, 1]), "count_changed")
+        self.assertEqual(build_site.classify([], [2, 2]), "new")
+        self.assertEqual(build_site.classify(None, [2, 2]), "new")
 
-    def test_import_refuses_duplicate_page(self):
-        args = self.save_pages([self.raws[:10], self.raws[:10], self.raws[20:]])
-        self.assertEqual(import_notes.main(args), 1)
-        self.assertEqual(list(self.out.glob("*/manifest.json")), [])
+    def test_movement(self):
+        first = {"1": [3, 2, 2], "2": [2, 2, 1], "3": [4, 3], "4": [1, 1, 1], "5": []}
+        now = {"1": [3, 3, 2], "2": [2, 1, 1], "3": [4, 3, 2], "5": [2, 2], "6": [3, 3, 3]}
+        m = build_site.movement(first, now)
+        self.assertEqual((m["up"], m["down"], m["count_changed"], m["newly_rated"], m["left"]), (1, 1, 1, 2, 1))
+        self.assertEqual((m["reviews_paired"], m["reviews_raised"], m["reviews_lowered"]), (6, 1, 1))
+        self.assertEqual(m["grid"][1][2], 1)
+        self.assertEqual(m["grid"][1][0], 1)
+        self.assertEqual(m["left_by_band"][0], [1, 1])
+
+    def test_history_bands(self):
+        rng = random.Random(3)
+        insights, statuses = [], {}
+        for i in range(100):
+            before = [rng.choice([3, 5, 6, 8]) for _ in range(3)]
+            after = [b + (1 if rng.random() < .2 else 0) for b in before]
+            insights.append({"id": f"p{i}", "review": {str(k): {"rating": f"{b};{a}"}
+                                                     for k, (b, a) in enumerate(zip(before, after))}})
+            statuses[f"p{i}"] = rng.choice(["Poster", "Reject", "Withdraw", "Oral"])
+        insights.append({"id": "desk", "review": {"0": {"rating": "5;5"}}})
+        statuses["desk"] = "Desk Reject"
+        insights.append({"id": "bad", "review": {"0": {"rating": "5"}}})
+        statuses["bad"] = "Poster"
+        out = build_history.build(insights, statuses)
+        self.assertEqual(out["papers"], 100)
+        self.assertEqual(len(out["bands"]), 50)
+        self.assertEqual(sum(b[0] for b in out["bands"]), 100)
+        for n, withdrawn, same, acc_same, changed, acc_changed in out["bands"]:
+            self.assertEqual(n, withdrawn + same + changed)
+            self.assertLessEqual(acc_same, same)
+            self.assertLessEqual(acc_changed, changed)
+        one = build_history.build([{"id": "a", "review": {"0": {"rating": "5;6"}, "1": {"rating": "6;6"}}}], {"a": "Poster"})
+        self.assertEqual((one["reviews_paired"], one["reviews_raised"], one["reviews_lowered"]), (2, 1, 0))
+        self.assertEqual([sum(b[k] for b in one["bands"]) for k in (4, 5)], [1, 1])
 
     def test_text_scores_parse(self):
         self.assertEqual(build_site.to_number("6: marginally above"), 6)

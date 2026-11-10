@@ -6,8 +6,9 @@ only paper titles, paper numbers, forum ids and numeric scores. Review text, abs
 keywords, authors and reviewer ids are never copied, and check_output() enforces this
 on the final files.
 
-Each snapshot leaves a small numeric summary in docs/data/snapshots/, so the score
-history survives even after the raw snapshot is deleted.
+Each snapshot leaves a numeric summary in state/snapshots/ (local, not published,
+because it lists every paper that was active that day), so the score history
+survives even after the raw snapshot is deleted.
 """
 import argparse
 import json
@@ -24,6 +25,9 @@ from common import iter_notes, reviews_of, value
 FIELDS = ["rating", "confidence", "soundness", "presentation", "informativeness"]
 TOP_SHARES = [0.05, 0.10, 0.25, 0.50]
 EXCLUDED_STATUSES = {"withdrawn", "desk_rejected"}
+BANDS = ["below 1.5", "1.5 to 2", "2 to 2.5", "2.5 to 3", "3 and above"]
+BAND_EDGES = [1.5, 2, 2.5, 3]
+RATING_LEVELS = 4
 
 
 def to_number(raw):
@@ -106,6 +110,55 @@ def summarize(snapshot_id, taken_at, papers, statuses):
     }
 
 
+def classify(first, now):
+    """Compare a paper's ratings now with its ratings at the first snapshot."""
+    if not first:
+        return "new"
+    if len(first) != len(now):
+        return "count_changed"
+    change = sum(now) - sum(first)
+    return "up" if change > 0 else "down" if change < 0 else "same"
+
+
+def band_of(paper_mean):
+    return sum(paper_mean >= edge for edge in BAND_EDGES)
+
+
+def movement(first, now):
+    """Count how papers moved between two {paper number: ratings} maps.
+
+    Review ids are not kept, so ratings are paired by sorted position. This can
+    undercount when two reviewers of one paper move in opposite directions.
+    """
+    counts = Counter(classify(first.get(number), ratings)
+                     for number, ratings in now.items() if ratings)
+    grid = [[0] * RATING_LEVELS for _ in range(RATING_LEVELS)]
+    paired = raised = lowered = 0
+    for number, ratings in now.items():
+        before = first.get(number)
+        if not before or len(before) != len(ratings):
+            continue
+        for old, new in zip(sorted(before), sorted(ratings)):
+            paired += 1
+            raised += new > old
+            lowered += new < old
+            if 1 <= old <= RATING_LEVELS and 1 <= new <= RATING_LEVELS:
+                grid[int(old) - 1][int(new) - 1] += 1
+    left_by_band = [[0, 0] for _ in BANDS]
+    for number, ratings in first.items():
+        if ratings:
+            band = left_by_band[band_of(sum(ratings) / len(ratings))]
+            band[0] += number not in now
+            band[1] += 1
+    return {
+        "up": counts["up"], "down": counts["down"],
+        "count_changed": counts["count_changed"], "newly_rated": counts["new"],
+        "left": sum(band[0] for band in left_by_band),
+        "reviews_paired": paired, "reviews_raised": raised, "reviews_lowered": lowered,
+        "grid": grid, "left_by_band": left_by_band,
+    }
+
+
 def rows_for_page(papers, first_ratings):
     rows = []
     for p in papers:
@@ -113,24 +166,32 @@ def rows_for_page(papers, first_ratings):
         rows.append([
             p["number"], p["forum"], p["title"], ratings,
             mean(p["scores"]["confidence"]),
-            mean(first_ratings.get(str(p["number"])) or []),
+            first_ratings.get(str(p["number"])),
         ])
     return rows
 
 
+def only_numbers(item):
+    if isinstance(item, list):
+        return all(only_numbers(x) for x in item)
+    return isinstance(item, (int, float))
+
+
 def check_output(site, papers_doc):
     """Stop the build if any text other than a title reached the page data."""
-    allowed_site = {"venue", "generated_at", "latest", "fields", "snapshots"}
+    allowed_site = {"venue", "generated_at", "latest", "fields", "bands", "snapshots"}
     allowed_papers = {"columns", "rows"}
     if set(site) != allowed_site or set(papers_doc) != allowed_papers:
         raise ValueError("unexpected keys in page data")
+    for snapshot in site["snapshots"]:
+        if "ratings_by_paper" in snapshot or not only_numbers(list(snapshot["movement"].values())):
+            raise ValueError("unexpected snapshot data")
     for row in papers_doc["rows"]:
-        number, forum, title, ratings, confidence, first_mean = row
+        number, forum, title, ratings, confidence, first = row
         ok = (isinstance(number, int) and re.fullmatch(r"[\w-]+", forum)
               and isinstance(title, str)
-              and all(isinstance(r, (int, float)) for r in ratings)
-              and all(v is None or isinstance(v, (int, float))
-                      for v in (confidence, first_mean)))
+              and all(isinstance(r, (int, float)) for r in ratings + (first or []))
+              and (confidence is None or isinstance(confidence, (int, float))))
         if not ok:
             raise ValueError(f"unexpected row for paper {number}")
 
@@ -144,11 +205,13 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("--snapshots", type=Path, default=Path("snapshots"))
     parser.add_argument("--docs", type=Path, default=Path("docs"))
+    parser.add_argument("--state", type=Path, default=Path("state"),
+                        help="local folder for per-paper snapshot summaries, never published")
     parser.add_argument("--allow-incomplete", action="store_true")
     args = parser.parse_args(argv)
 
     data_dir = args.docs / "data"
-    summary_dir = data_dir / "snapshots"
+    summary_dir = args.state / "snapshots"
     summary_dir.mkdir(parents=True, exist_ok=True)
 
     usable = []
@@ -180,10 +243,10 @@ def main(argv=None):
         print(f"Raw snapshot {latest['id']} is missing, so its paper list cannot be rebuilt. "
               "Restore it or delete its summary.", file=sys.stderr)
         return 1
-    first_ratings = summaries[0]["ratings_by_paper"] if len(summaries) > 1 else {}
+    first_ratings = summaries[0]["ratings_by_paper"]
 
     papers_doc = {
-        "columns": ["number", "forum", "title", "ratings", "confidence_mean", "first_mean"],
+        "columns": ["number", "forum", "title", "ratings", "confidence_mean", "first_ratings"],
         "rows": rows_for_page(latest_papers, first_ratings),
     }
     site = {
@@ -191,7 +254,10 @@ def main(argv=None):
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "latest": latest["id"],
         "fields": [f for f in FIELDS if f in latest["histograms"]],
-        "snapshots": [{k: v for k, v in s.items() if k != "ratings_by_paper"} for s in summaries],
+        "bands": BANDS,
+        "snapshots": [{**{k: v for k, v in s.items() if k != "ratings_by_paper"},
+                       "movement": movement(first_ratings, s["ratings_by_paper"])}
+                      for s in summaries],
     }
     check_output(site, papers_doc)
     write_json(data_dir / "site.json", site)
