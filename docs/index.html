@@ -554,20 +554,27 @@ const load = name => fetch(`data/${name}.json`, { cache: "no-cache" }).then(r =>
 
 (async () => {
   const historyPromise = load("history").catch(e => { console.warn(e); return null; });
+  const papersPromise = load("papers");
+  papersPromise.catch(() => {});
+  const run = steps => { for (const step of steps) try { step(); } catch (e) { console.error(step.name, e); } };
   try {
-    const [site, doc] = await Promise.all([load("site"), load("papers")]);
-    HISTORY = await historyPromise;
-    SITE = site; FIRST = site.snapshots[0]; LAST = site.snapshots[site.snapshots.length - 1];
-    PAPERS = doc.rows.map(([number, forum, title, ratings, conf, first]) => {
+    // The small summary draws first. The paper list is large and fills in when it arrives.
+    $("q").disabled = true; $("q").placeholder = "Loading the paper list…";
+    SITE = await load("site"); HISTORY = await historyPromise;
+    FIRST = SITE.snapshots[0]; LAST = SITE.snapshots[SITE.snapshots.length - 1];
+    $("footCounts").textContent = `${fmt(LAST.papers_with_ratings)} papers and ${fmt(LAST.reviews)} reviews are counted now. ${fmt(LAST.withdrawn)} papers are withdrawn and ${fmt(LAST.desk_rejected)} are desk-rejected.`;
+    run([renderHeader, renderPulse, renderExpect, renderDist, renderWhich]);
+    const doc = await papersPromise;
+    PAPERS = doc.rows.map(([number, forum, title, ratings, conf, firstRaw]) => {
+      const first = firstRaw === null ? ratings : firstRaw;
       const mean = meanOf(ratings), firstMean = meanOf(first), kind = ratings.length ? classify(first, ratings) : "same";
       return { number, forum, title, ratings, first, mean, firstMean, kind, key: title.toLowerCase(),
         change: mean != null && firstMean != null && Math.abs(mean - firstMean) > 1e-6 ? mean - firstMean : kind === "same" && ratings.length ? 0 : null };
     });
     const rated = PAPERS.filter(p => p.mean != null).sort((a, b) => b.mean - a.mean);
     rated.forEach((p, i) => { p.rank = i && p.mean === rated[i - 1].mean ? rated[i - 1].rank : i + 1; });
-    $("footCounts").textContent = `${fmt(LAST.papers_with_ratings)} papers and ${fmt(LAST.reviews)} reviews are counted now. ${fmt(LAST.withdrawn)} papers are withdrawn and ${fmt(LAST.desk_rejected)} are desk-rejected.`;
-    for (const step of [renderHeader, setupLookup, renderPulse, renderExpect, renderTables, renderDist, renderWhich])
-      try { step(); } catch (e) { console.error(step.name, e); }
+    $("q").disabled = false; $("q").placeholder = "Paper number or title words";
+    run([setupLookup, renderTables]);
   } catch (e) {
     console.error(e);
     $("updated").textContent = "The data could not be loaded. Please reload the page.";

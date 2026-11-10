@@ -198,7 +198,7 @@ class Pipeline(unittest.TestCase):
         run_download(self.out, FakeClient(self.raws))
         site, papers = self.build()
         row = [r for r in papers["rows"] if r[0] == 1][0]
-        self.assertEqual(row[5], row[3])
+        self.assertIsNone(row[5])
         self.assertEqual(site["snapshots"][0]["movement"]["left"], 0)
 
     def test_classify(self):

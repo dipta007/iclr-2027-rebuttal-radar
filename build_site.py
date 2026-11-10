@@ -163,10 +163,11 @@ def rows_for_page(papers, first_ratings):
     rows = []
     for p in papers:
         ratings = sorted(p["scores"]["rating"], reverse=True)
+        first = first_ratings.get(str(p["number"])) or []
         rows.append([
             p["number"], p["forum"], p["title"], ratings,
             mean(p["scores"]["confidence"]),
-            first_ratings.get(str(p["number"])),
+            None if first == ratings else first,  # null means unchanged, to keep the file small
         ])
     return rows
 
