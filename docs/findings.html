@@ -186,7 +186,7 @@ footer { margin-top: 64px; padding-top: 18px; border-top: 2px solid var(--ink); 
         <button class="opt" data-sub="by_presentation" aria-pressed="false">How clear the paper is</button>
       </div>
       <div class="heat" id="rewardGrid"></div>
-      <p class="how">Each box shows how many reviews said accept (a rating of 3 or 4). Reviewers give three extra scores: soundness, informativeness, and presentation. The words here are short names for those scores. One reviewer gives all of them at once, so this shows what goes together, not what causes what.</p>
+      <p class="how">Each box shows how many reviews said accept (a rating of 3 or 4). Reviewers give three extra scores: soundness, informativeness, and presentation. Each goes from 1 (lowest) to 3. The words here are short names for the three levels, not the exact text of the review form. One reviewer gives all of them at once, so this shows what goes together, not what causes what.</p>
     </article>
 
     <article class="rq" id="rank">
@@ -487,10 +487,10 @@ function renderWhich() {
 }
 
 function renderReward() {
-  const S = D.subs, g = S.by_informativeness, rowName = ["Big problems", "Small problems", "No problems"];
+  const S = D.subs, g = S.by_informativeness, rowName = ["Bigger problems", "Small problems", "No problems"];
   const names = { by_informativeness: ["Learned little", "Learned something", "Learned a lot"], by_presentation: ["Hard to read", "Takes effort", "Clear"] };
   $("rewardHead").textContent = "Papers that teach them something new.";
-  $("rewardText").replaceChildren(h("strong", {}, `No problems found, but nothing learned: ${p0(g[2][0].accept)} said accept. Small problems found, but a lot learned: ${p0(g[1][2].accept)}.`), ` Only ${p0(S.top.i.share)} of reviews said the reviewer learned a lot. Clear writing was common (${p0(S.top.p.share)}) and helped the least.`);
+  $("rewardText").replaceChildren(h("strong", {}, `No problems found, but little learned: ${p0(g[2][0].accept)} said accept. Small problems found, but a lot learned: ${p0(g[1][2].accept)}.`), ` Only ${p0(S.top.i.share)} of reviews said the reviewer learned a lot. Clear writing was common (${p0(S.top.p.share)}) and helped the least.`);
   let key = "by_informativeness";
   const draw = () => {
     const G = D.subs[key], kids = [h("span", {}), ...[1, 2, 3].map(c => h("span", { class: "topl" }, names[key][c - 1]))];
