@@ -214,7 +214,7 @@ footer { margin-top: 64px; padding-top: 18px; border-top: 2px solid var(--ink); 
   <footer>
     <p><strong>Credit.</strong> This site is built on <a href="https://github.com/shiqiangw/iclr-2027-scores">iclr-2027-scores</a> by shiqiangw, who made the original <a href="https://shiqiangw.github.io/iclr-2027-scores/">ICLR 2027 Scores</a> page, the data pipeline, and the first snapshot. The rebuttal sections were added in this <a href="https://github.com/dipta007/iclr-2027-rebuttal-radar">fork</a>.</p>
     <p><strong>What is counted.</strong> Only official reviews and their overall rating. <span id="footCounts"></span> Withdrawn and desk-rejected papers are not listed. The page shows paper titles, numeric scores, and OpenReview links only. Visits are counted with Cloudflare Web Analytics, which uses no cookies. The paper you look up is not part of that count.</p>
-    <p><strong>Limits.</strong> A changed score is found by comparing each paper's sorted scores, so two opposite changes on one paper can hide each other. Past-year rates describe what happened to similar papers. They are not a prediction for any paper. Data comes from the OpenReview API and updates every 12 hours. Past-year numbers are built from the public data of <a href="https://github.com/papercopilot/iclr-insights">Paper Copilot</a>.</p>
+    <p><strong>Limits.</strong> A changed score is found by comparing each paper's sorted scores, so two opposite changes on one paper can hide each other. Past-year rates describe what happened to similar papers. They are not a prediction for any paper. Data comes from the OpenReview API. It was updated every 12 hours until the rebuttal period ended. Past-year numbers are built from the public data of <a href="https://github.com/papercopilot/iclr-insights">Paper Copilot</a>.</p>
   </footer>
 </main>
 <div id="tip" role="status"></div>
@@ -273,10 +273,8 @@ const chips = a => a && a.length ? a.map(x => h("span", { class: "chip num" }, S
 let SITE, FIRST, LAST, PAPERS = [], HISTORY = null, SHOWN = null;
 
 function renderHeader() {
-  const taken = new Date(LAST.taken_at), today = new Date();
-  let next = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate(), 0, 10));
-  while (next <= today) next = new Date(next.getTime() + 12 * 3600e3);
-  $("updated").replaceChildren(`Scores as of ${stamp(taken)}, your time.`, h("br"), `Next update around ${stamp(next)}, your time.`);
+  const taken = new Date(LAST.taken_at);
+  $("updated").replaceChildren(`Final scores as of ${stamp(taken)}, your time.`, h("br"), "The rebuttal period has ended, so updates have stopped.");
   document.querySelectorAll(".first-date").forEach(n => { n.textContent = day(FIRST.taken_at); });
 }
 
