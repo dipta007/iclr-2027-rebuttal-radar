@@ -1,6 +1,6 @@
 # ICLR 2027 Rebuttal Radar
 
-See how ICLR 2027 review scores move during the rebuttal, and where your paper stands.
+See how ICLR 2027 review scores moved during the rebuttal, and where your paper ended up. The rebuttal is over, so the data is final.
 
 Site: https://dipta007.github.io/iclr-2027-rebuttal-radar/
 
@@ -10,17 +10,17 @@ This project is a fork of [iclr-2027-scores](https://github.com/shiqiangw/iclr-2
 
 ## What the page shows
 
-- **Where does my paper stand now?** Type a paper number or title. You get the scores then and now, the rank as a range, why the rank moved, what one raised score would do, and what happened to similar papers in ICLR 2024 and 2025.
+- **Where did my paper end up?** Type a paper number or title. You get the day-one and final scores, the rank as a range, and short answers for that paper: how papers at the same final rank did in ICLR 2024 and 2025, what the score change was worth, and whether that was normal.
 - **What moved.** How many papers went up, went down, got a different number of reviews, or left.
-- **How much more will move.** The share of raised review scores so far, next to the final share in past years.
+- **How much moved, compared with past years.** The share of raised review scores, next to past years.
 - **Papers that moved.** A searchable list with scores before and after.
-- **Score distribution, then and now**, and the cut-offs for the top 5, 10, 25, and 50 percent.
-- **Which scores move**, and which score groups lose the most papers.
+- **Score distribution, day one and final**, and the cut-offs for the top 5, 10, 25, and 50 percent.
+- **Which scores moved**, and which score groups lost the most papers.
 - **All papers**, ranked by mean score.
 
 ## What is published
 
-Only paper numbers, titles, OpenReview forum ids, and numeric scores. Review text, abstracts, authors, and reviewer ids are never copied, and `check_output()` in `build_site.py` stops the build if any other text reaches the page data. Withdrawn and desk-rejected papers are not listed.
+Only paper numbers, titles, OpenReview forum ids, and numeric scores. The findings page adds totals and primary-area names. Review text, abstracts, authors, and reviewer ids are never copied, and `check_output()` in `build_site.py` stops the build if any other text reaches the page data. Withdrawn and desk-rejected papers are not listed.
 
 Visits are counted with Cloudflare Web Analytics (no cookies). The looked-up paper number is kept in the `#` part of the address, which is not sent to any server.
 
@@ -35,6 +35,8 @@ Raw downloads hold review text. They stay in `snapshots/`, which git ignores. Pe
 - Past-year rates come from papers with a similar starting rank. They are not a prediction.
 
 ## Refresh every 12 hours
+
+The schedule was stopped when the rebuttal ended. The steps below still work for a manual run.
 
 ```sh
 ./refresh.sh
@@ -62,6 +64,14 @@ launchctl load ~/Library/LaunchAgents/com.dipta007.rebuttal-radar.plist
 
 ```sh
 uv run --no-project python tools/build_history.py previous docs/data/history.json
+```
+
+## Findings page
+
+`docs/findings.html` answers ten questions about the rebuttal, sorted with the most surprising first. Its data, `docs/data/findings.json`, holds totals only: no paper and no reviewer is listed. To rebuild it from the final raw snapshot, the per-snapshot summaries, and the past-year files (see the next section):
+
+```sh
+uv run --no-project python tools/build_findings.py snapshots/<final snapshot id> state/snapshots previous docs/data/findings.json
 ```
 
 ## Tests

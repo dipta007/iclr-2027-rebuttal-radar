@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Findings | ICLR 2027 Rebuttal Radar</title>
+<meta name="description" content="Is your final ICLR 2027 score enough? What past years say, and what 126,413 reviews did during the rebuttal.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dipta007.github.io/iclr-2027-rebuttal-radar/findings.html">
+<meta property="og:title" content="What the ICLR 2027 rebuttal changed">
+<meta property="og:description" content="Is your final score enough? What past years say, how much rank an unchanged score lost, and what 126,413 reviews did in two weeks.">
+<meta property="og:image" content="https://dipta007.github.io/iclr-2027-rebuttal-radar/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://dipta007.github.io/iclr-2027-rebuttal-radar/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme: light;
+  --page: #f3f5f8; --card: #ffffff; --line: #d9dee6; --grid: #e8ecf1; --track: #e3e8ef;
+  --ink: #14202e; --ink-2: #47566a; --ink-3: #6b7a8d;
+  --up: #2a78d6; --down: #eb6834; --gone: #9aa6b5; --then: #8a97a8; --focus: #14202e; --link: #1c5cab; --ask: #9a5600;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page: #10161d; --card: #19212b; --line: #2e3947; --grid: #263140; --track: #263140;
+    --ink: #eef2f6; --ink-2: #b9c4d1; --ink-3: #8d9aab;
+    --up: #3987e5; --down: #d95926; --gone: #5d6a7b; --then: #7c899a; --focus: #eef2f6; --link: #86b6ef; --ask: #ffb224;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink);
+  font: 17px/1.55 "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 900px; margin: 0 auto; padding: 40px 16px 64px; }
+h1, h2, h3, .big { font-family: "Bricolage Grotesque", "Atkinson Hyperlegible", system-ui, sans-serif; }
+h1 { font-size: clamp(30px, 6.2vw, 50px); line-height: 1.02; margin: 0; font-weight: 700; letter-spacing: -0.02em; }
+h1 a { color: inherit; text-decoration: none; }
+h2 { font-size: clamp(26px, 5vw, 36px); line-height: 1.12; margin: 0 0 8px; font-weight: 700; letter-spacing: -0.015em; }
+h3 { font-size: clamp(22px, 4.2vw, 29px); line-height: 1.16; margin: 2px 0 10px; font-weight: 700; letter-spacing: -0.012em; }
+p { margin: 0 0 10px; }
+a { color: var(--link); }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.meta { color: var(--ink-2); font-size: 15px; margin-top: 10px; }
+.by a { font-weight: 700; }
+.small { color: var(--ink-3); font-size: 14px; }
+.num { font-variant-numeric: tabular-nums; }
+[hidden] { display: none !important; }
+
+.tabs { display: flex; gap: 4px; margin-top: 22px; border-bottom: 2px solid var(--ink); }
+.tabs a { padding: 9px 16px; border-radius: 9px 9px 0 0; color: var(--ink-2); text-decoration: none; font-weight: 700; }
+.tabs a:hover { color: var(--ink); background: var(--track); }
+.tabs a[aria-current="page"] { background: var(--ink); color: var(--card); }
+
+.lead { margin-top: 30px; }
+.lead p { color: var(--ink-2); font-size: 19px; }
+.jump { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.jump a, button.opt { font: inherit; font-size: 15px; color: var(--ink); background: var(--card); border: 1px solid var(--line);
+  border-radius: 8px; padding: 6px 12px; cursor: pointer; text-decoration: none; }
+button.opt[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--card); }
+.mine { margin-top: 22px; background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--ask); border-radius: 10px; padding: 14px 16px 10px; }
+.mine div { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 6px; }
+.mine input { flex: 1 1 160px; min-width: 0; font: inherit; padding: 8px 10px; color: var(--ink); background: var(--page); border: 2px solid var(--ink-3); border-radius: 8px; }
+.mine input:focus { border-color: var(--ink); outline: none; }
+.mine button { background: var(--ink); border-color: var(--ink); color: var(--card); font-weight: 700; }
+.mine p { margin: 0; }
+.mine ul { list-style: none; margin: 0 0 6px; padding: 0; }
+.mine li a { display: block; padding: 8px 6px; border-top: 1px solid var(--grid); color: var(--ink); text-decoration: none; }
+.mine li a:hover, .mine li a:focus-visible { background: var(--page); }
+.mine li b { color: var(--ink-2); font-weight: 400; margin-right: 8px; font-variant-numeric: tabular-nums; }
+.mine li.note { padding: 8px 6px; color: var(--ink-3); font-size: 14px; }
+.heat { display: grid; grid-template-columns: max-content repeat(3, 1fr); gap: 4px; font-size: 14px; color: var(--ink-2); }
+.heat .cell { border-radius: 6px; padding: 12px 6px; text-align: center; color: var(--ink); }
+.heat .cell b { display: block; font: 700 24px/1.1 "Bricolage Grotesque", sans-serif; font-variant-numeric: tabular-nums; }
+.heat .cell span { font-size: 12px; opacity: .85; }
+.heat .side { display: flex; align-items: center; padding-right: 8px; } .heat .topl { text-align: center; padding-bottom: 2px; }
+.group { margin-top: 34px; }
+.group > p { color: var(--ink-2); }
+
+.rq { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px 20px 18px; margin-top: 18px; }
+.rq .ask { color: var(--ask); font: 700 18px/1.3 "Bricolage Grotesque", "Atkinson Hyperlegible", system-ui, sans-serif; margin: 0; }
+.rq .so { color: var(--ink-2); }
+.rq .so strong { color: var(--ink); }
+.rq .how { color: var(--ink-3); font-size: 14px; margin: 12px 0 0; }
+.controls { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 14px 0 12px; }
+.controls > span { color: var(--ink-2); font-size: 15px; margin-right: 4px; }
+.readout { font-size: 17px; margin: 0 0 8px; min-height: 2.9em; }
+.readout b { font-variant-numeric: tabular-nums; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 14px; color: var(--ink-2); margin: 0 0 10px; }
+.key { display: inline-block; width: 14px; height: 10px; border-radius: 2px; margin-right: 6px; background: var(--up); }
+.key.down { background: var(--down); } .key.gone { background: var(--gone); } .key.same { background: var(--track); border: 1px solid var(--line); }
+.key.then { background: none; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--then); }
+.key.now { width: 10px; height: 10px; border-radius: 50%; }
+
+.rows { display: grid; grid-template-columns: max-content 1fr max-content; gap: 9px 12px; align-items: center; }
+.rows .name { font-size: 15px; color: var(--ink); }
+.rows .v { font-variant-numeric: tabular-nums; font-size: 15px; min-width: 3.2em; text-align: right; }
+.stack { display: flex; height: 20px; gap: 2px; border-radius: 4px; overflow: hidden; background: none; }
+.stack i { display: block; height: 100%; min-width: 0; }
+.stack .up { background: var(--up); } .stack .down { background: var(--down); } .stack .gone { background: var(--gone); } .stack .same { background: var(--track); }
+.stack i:hover, .bar1:hover > i { filter: brightness(1.12); }
+.bar1 { height: 20px; background: var(--track); border-radius: 4px; overflow: hidden; }
+.bar1 > i { display: block; height: 100%; background: var(--up); border-radius: 0 4px 4px 0; }
+.bar1.low > i { background: var(--down); }
+.bar1.then > i { background: var(--then); }
+
+.arearows { display: grid; gap: 12px; }
+.arearow .top { display: flex; justify-content: space-between; gap: 12px; font-size: 15px; }
+.arearow .top span:last-child { font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--ink-2); }
+.arearow .top b { color: var(--ink); }
+.dumb { position: relative; height: 14px; margin-top: 4px; }
+.dumb::before { content: ""; position: absolute; left: 0; right: 0; top: 6px; height: 2px; background: var(--track); }
+.dumb .link { position: absolute; top: 5px; height: 4px; background: var(--up); opacity: .45; border-radius: 2px; }
+.dumb .a, .dumb .b { position: absolute; top: 1px; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; }
+.dumb .a { background: var(--card); border: 2px solid var(--then); } .dumb .b { background: var(--up); border: 2px solid var(--card); }
+.dumb .w { position: absolute; top: 2px; height: 10px; left: 0; background: var(--gone); border-radius: 0 3px 3px 0; }
+
+.chart { position: relative; }
+.chart svg { display: block; width: 100%; overflow: visible; touch-action: pan-y; }
+.chart text { font: 13px "Atkinson Hyperlegible", sans-serif; fill: var(--ink-3); font-variant-numeric: tabular-nums; }
+.chart .lab { fill: var(--ink); } .chart .strong { fill: var(--ink); font-weight: 700; }
+.gridline { stroke: var(--grid); } .base { stroke: var(--line); }
+.cross { stroke: var(--ink-3); stroke-dasharray: 3 3; pointer-events: none; }
+.picks { display: contents; }
+.line-then { fill: none; stroke: var(--then); stroke-width: 2.5; }
+.zone { fill: var(--ask); opacity: .22; } .zoneline { stroke: var(--ask); stroke-width: 2; }
+.key.ask { background: var(--ask); opacity: .5; margin-right: 6px; }
+.markline { stroke: var(--ink); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.col { fill: var(--then); } .col.hot { fill: var(--up); } .col.cold { fill: var(--gone); }
+.band { fill: var(--track); stroke: var(--card); stroke-width: 1; cursor: pointer; }
+.band.on { fill: var(--up); }
+.line-up { fill: none; stroke: var(--up); stroke-width: 2.5; } .line-down { fill: none; stroke: var(--down); stroke-width: 2; }
+.area-up { fill: var(--up); opacity: .12; }
+.dot { fill: var(--up); stroke: var(--card); stroke-width: 2; }
+#tip { position: fixed; pointer-events: none; display: none; z-index: 5; background: var(--ink); color: var(--card);
+  border-radius: 6px; padding: 6px 10px; font-size: 14px; line-height: 1.4; max-width: 280px; white-space: pre-line; }
+footer { margin-top: 64px; padding-top: 18px; border-top: 2px solid var(--ink); color: var(--ink-2); font-size: 15px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1><a href="./">ICLR 2027 Rebuttal Radar</a></h1>
+    <p class="meta by">By <a href="https://roydipta.com" target="_blank" rel="noopener noreferrer">Shubhashis Roy Dipta</a> (<a href="https://notes.roydipta.com" target="_blank" rel="noopener noreferrer">notes</a>, <a href="https://x.com/iamdipta007" target="_blank" rel="noopener noreferrer">X</a>, <a href="https://scholar.google.com/citations?hl=en&amp;user=j2ElsNIAAAAJ&amp;view_op=list_works&amp;sortby=pubdate" target="_blank" rel="noopener noreferrer">Scholar</a>). Built on <a href="https://shiqiangw.github.io/iclr-2027-scores/" target="_blank" rel="noopener noreferrer">ICLR 2027 Scores</a> by shiqiangw.</p>
+    <nav class="tabs" aria-label="Pages">
+      <a href="./">Your paper</a>
+      <a href="findings.html" aria-current="page">Findings</a>
+    </nav>
+  </header>
+
+  <div class="lead">
+    <h2>What happened in the rebuttal</h2>
+    <p id="leadText">Loading data…</p>
+  </div>
+
+  <form class="mine" id="mine">
+    <label for="mineQ"><strong>Want to see your own paper?</strong> Type its number or a few words from its title.</label>
+    <div><input id="mineQ" type="search" placeholder="Paper number or title words" autocomplete="off"><button class="opt" type="submit">Show my paper</button></div>
+    <ul id="mineList" aria-live="polite"></ul>
+    <p class="small">It opens your paper in a new browser tab. What you type is not sent anywhere.</p>
+  </form>
+
+  <section class="group" id="findings">
+
+    <article class="rq" id="chance">
+      <p class="ask">Is my final score enough?</p>
+      <h3 id="chanceHead"></h3>
+      <p class="so" id="chanceText"></p>
+      <div class="controls" role="group" aria-label="Pick your final score"><span>Pick your final score:</span><span id="chancePick" class="picks"></span></div>
+      <p class="readout" id="chanceRead" aria-live="polite"></p>
+      <div class="legend"><span><i class="key" style="background:var(--then)"></i>ICLR 2024</span><span><i class="key"></i>ICLR 2025</span><span><i class="key ask"></i>Where your score ranks this year</span></div>
+      <div class="chart" id="chanceChart"></div>
+      <p class="how">The lines show how many papers got in, by their rank after the rebuttal. Past years used scores from 1 to 10, so this compares ranks, not scores.</p>
+    </article>
+
+    <article class="rq" id="reward">
+      <p class="ask">What do reviewers like most?</p>
+      <h3 id="rewardHead"></h3>
+      <p class="so" id="rewardText"></p>
+      <div class="controls" role="group" aria-label="What to compare"><span>Compare problems with:</span>
+        <button class="opt" data-sub="by_informativeness" aria-pressed="true">What the reviewer learned</button>
+        <button class="opt" data-sub="by_presentation" aria-pressed="false">How clear the paper is</button>
+      </div>
+      <div class="heat" id="rewardGrid"></div>
+      <p class="how">Each box shows how many reviews said accept (a rating of 3 or 4). Reviewers give three extra scores: soundness, informativeness, and presentation. The words here are short names for those scores. One reviewer gives all of them at once, so this shows what goes together, not what causes what.</p>
+    </article>
+
+    <article class="rq" id="rank">
+      <p class="ask">My score did not change. Did my rank drop?</p>
+      <h3 id="rankHead"></h3>
+      <p class="so" id="rankText"></p>
+      <div class="controls" role="group" aria-label="Pick a score"><span>Pick a score:</span><span id="rankPick" class="picks"></span></div>
+      <p class="readout" id="rankRead" aria-live="polite"></p>
+      <div class="chart" id="rankChart"></div>
+      <p class="how">Each stripe is one score. Higher on the chart means a better rank. Click a stripe to pick it.</p>
+    </article>
+
+    <article class="rq" id="shuffle">
+      <p class="ask">Did the rebuttal change which papers are on top?</p>
+      <h3 id="shuffleHead"></h3>
+      <p class="so" id="shuffleText"></p>
+      <div class="rows" id="shuffleRows"></div>
+      <p class="how">Where the papers that ended at 2.67 or higher were on day one.</p>
+    </article>
+
+    <article class="rq" id="which">
+      <p class="ask">Which reviewers raised their score?</p>
+      <h3 id="whichHead"></h3>
+      <p class="so" id="whichText"></p>
+      <div class="controls" role="group" aria-label="Rating this reviewer gave"><span>This reviewer gave:</span>
+        <button class="opt" data-own="1" aria-pressed="false">1, strong reject</button>
+        <button class="opt" data-own="2" aria-pressed="true">2, weak reject</button>
+        <button class="opt" data-own="3" aria-pressed="false">3, weak accept</button>
+      </div>
+      <div class="rows" id="whichRows"></div>
+      <p class="how">Papers with three reviewers. The bar shows how often this reviewer's score went up. This does not prove that reviewers copy each other: a good paper gets good scores from everyone and also writes a good rebuttal.</p>
+    </article>
+
+    <article class="rq" id="agree">
+      <p class="ask">Did reviewers agree more after the discussion?</p>
+      <h3 id="agreeHead"></h3>
+      <p class="so" id="agreeText"></p>
+      <div class="legend"><span><i class="key" style="background:var(--then)"></i>Day one</span><span><i class="key"></i>After the rebuttal</span></div>
+      <div class="rows" id="agreeRows"></div>
+      <p class="how">The gap is the highest rating minus the lowest rating on a paper.</p>
+    </article>
+
+    <article class="rq" id="fourth">
+      <p class="ask">Is a fourth reviewer good for a paper?</p>
+      <h3 id="fourthHead"></h3>
+      <p class="so" id="fourthText"></p>
+      <div class="rows" id="fourthRows"></div>
+      <p class="how">2.67 is only a marker used on this page. With a marker at 2.5, papers with four reviewers would do better. Extra reviewers are also not given at random.</p>
+    </article>
+
+    <article class="rq" id="luck">
+      <p class="ask">How much is luck?</p>
+      <h3 id="luckHead"></h3>
+      <p class="so" id="luckText"></p>
+      <div class="chart" id="luckChart"></div>
+      <p class="how">Papers with three reviewers. Add the three ratings: 8 (for example 3, 3, 2) gives a score of 2.67, and 7 gives 2.33. The blue bars are the papers one point away from 2.67.</p>
+    </article>
+
+    <article class="rq" id="when">
+      <p class="ask">When did the scores change?</p>
+      <h3 id="whenHead"></h3>
+      <p class="so" id="whenText"></p>
+      <div class="chart" id="whenChart"></div>
+      <p class="how">The line counts papers with a higher score than on day one. Move over the chart to see any date. Times are in UTC.</p>
+    </article>
+
+    <article class="rq" id="area">
+      <p class="ask">Did my research area matter?</p>
+      <h3 id="areaHead"></h3>
+      <p class="so" id="areaText"></p>
+      <div class="controls" role="group" aria-label="Sort areas"><span>Sort by:</span>
+        <button class="opt" data-area="last_high" aria-pressed="true">At the end</button>
+        <button class="opt" data-area="gain" aria-pressed="false">Growth</button>
+        <button class="opt" data-area="withdrew" aria-pressed="false">Withdrawn papers</button>
+      </div>
+      <div class="legend" id="areaLegend"></div>
+      <div class="arearows" id="areaRows"></div>
+      <p class="how">Share of papers at 2.67 or higher. Only areas with 300 or more papers. Hover or tap a row for details.</p>
+    </article>
+  </section>
+
+  <footer>
+    <p><strong>Who made this.</strong> <a href="https://roydipta.com" target="_blank" rel="noopener noreferrer">Shubhashis Roy Dipta</a>, a PhD student who also went through this rebuttal. More of my work: <a href="https://roydipta.com" target="_blank" rel="noopener noreferrer">portfolio</a>, <a href="https://notes.roydipta.com" target="_blank" rel="noopener noreferrer">notes</a>, <a href="https://x.com/iamdipta007" target="_blank" rel="noopener noreferrer">X</a>, <a href="https://scholar.google.com/citations?hl=en&amp;user=j2ElsNIAAAAJ&amp;view_op=list_works&amp;sortby=pubdate" target="_blank" rel="noopener noreferrer">Scholar</a>.</p>
+    <p><strong>Data.</strong> <span id="footData"></span> This page shows only totals. It does not list any paper or reviewer.</p>
+    <p><strong>Limits.</strong> The numbers show what happened, not why. Nothing here can tell you a decision. Scores were saved about every 12 hours, so times can be off by half a day.</p>
+    <p><strong>Credit.</strong> Built on <a href="https://github.com/shiqiangw/iclr-2027-scores" target="_blank" rel="noopener noreferrer">iclr-2027-scores</a> by shiqiangw. The code is in this <a href="https://github.com/dipta007/iclr-2027-rebuttal-radar" target="_blank" rel="noopener noreferrer">fork</a>.</p>
+  </footer>
+</main>
+<div id="tip" role="status"></div>
+<script>
+"use strict";
+const $ = id => document.getElementById(id), SVG = "http://www.w3.org/2000/svg";
+const fmt = n => n.toLocaleString("en-US");
+const p1 = x => x.toFixed(1) + "%", p0 = x => Math.round(x) + "%";
+const when = iso => new Date(iso).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", timeZone: "UTC" }) + " UTC";
+const dayOf = iso => new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
+const score = s => (Math.round(s * 100) / 100).toFixed(2);
+
+function h(tag, props = {}, ...kids) {
+  const node = document.createElement(tag);
+  for (const k in props) { if (k === "class") node.className = props[k]; else if (k in node) node[k] = props[k]; else node.setAttribute(k, props[k]); }
+  node.append(...kids.filter(k => k != null));
+  return node;
+}
+function el(tag, attrs = {}, parent, text) {
+  const node = document.createElementNS(SVG, tag);
+  for (const k in attrs) node.setAttribute(k, attrs[k]);
+  if (text != null) node.textContent = text;
+  if (parent) parent.appendChild(node);
+  return node;
+}
+function showTip(text, x, y) {
+  const t = $("tip");
+  t.textContent = text; t.style.display = "block";
+  t.style.left = Math.max(8, Math.min(x + 14, innerWidth - t.offsetWidth - 8)) + "px";
+  t.style.top = Math.max(8, y - t.offsetHeight - 12) + "px";
+}
+const hideTip = () => { $("tip").style.display = "none"; };
+function tip(node, text) {
+  const show = e => showTip(typeof text === "function" ? text() : text, e.clientX, e.clientY);
+  node.addEventListener("pointermove", show); node.addEventListener("pointerdown", show);
+  node.addEventListener("pointerleave", e => { if (e.pointerType === "mouse") hideTip(); });
+  return node;
+}
+function pressed(selector, attr, value) {
+  document.querySelectorAll(selector).forEach(b => b.setAttribute("aria-pressed", String(b.getAttribute(attr) === String(value))));
+}
+// Redraw a chart at the real width of its box, so text keeps its size on a phone.
+function sized(box, draw) {
+  let last = 0;
+  const run = () => { const w = box.clientWidth; if (w && w !== last) { last = w; box.replaceChildren(); draw(w); } };
+  new ResizeObserver(run).observe(box); run();
+  return () => { last = 0; run(); };
+}
+// Vertical crosshair that snaps to the nearest x and reports it.
+function crosshair(svg, xs, top, bottom, onMove) {
+  const line = el("line", { class: "cross", y1: top, y2: bottom, visibility: "hidden" }, svg);
+  const move = e => {
+    const r = svg.getBoundingClientRect(), x = e.clientX - r.left;
+    let i = 0; xs.forEach((v, j) => { if (Math.abs(v - x) < Math.abs(xs[i] - x)) i = j; });
+    line.setAttribute("x1", xs[i]); line.setAttribute("x2", xs[i]); line.setAttribute("visibility", "visible");
+    showTip(onMove(i), e.clientX, e.clientY);
+  };
+  svg.addEventListener("pointermove", move); svg.addEventListener("pointerdown", move);
+  svg.addEventListener("pointerleave", e => { if (e.pointerType === "mouse") { line.setAttribute("visibility", "hidden"); hideTip(); } });
+}
+
+document.addEventListener("pointerdown", e => { if (e.pointerType !== "mouse" && !e.target.closest(".rows, .arearows, svg")) hideTip(); });
+
+// The paper list is large, so it loads only when someone uses this box. Nothing typed here is sent anywhere.
+{
+  const q = $("mineQ"), list = $("mineList"); let papers = null, loading = null;
+  const load = () => loading || (loading = fetch("data/papers.json").then(r => r.json()).then(d => { papers = d.rows.map(r => ({ number: r[0], title: r[2], key: r[2].toLowerCase() })); suggest(); })
+    .catch(() => { loading = null; list.replaceChildren(h("li", { class: "note" }, "The paper list could not be loaded. Press the button to search on the other tab.")); }));
+  const go = t => { const n = /^#?\d+$/.test(t); window.open(!t ? "./" : n ? "./#paper=" + t.replace("#", "") : "./#q=" + encodeURIComponent(t), "_blank", "noopener"); };
+  function suggest() {
+    const text = q.value.trim().toLowerCase();
+    if (!text) return list.replaceChildren();
+    if (!papers) return list.replaceChildren(h("li", { class: "note" }, "Loading the paper list…"));
+    const n = /^#?\d+$/.test(text) ? +text.replace("#", "") : null, terms = text.split(/\s+/);
+    const hits = n != null ? papers.filter(p => String(p.number).startsWith(String(n))).sort((a, b) => a.number - b.number) : papers.filter(p => terms.every(t => p.key.includes(t)));
+    if (!hits.length) return list.replaceChildren(h("li", { class: "note" }, "Not found in the active list. The paper may be withdrawn or desk-rejected."));
+    list.replaceChildren(...hits.slice(0, 6).map(p => h("li", {}, h("a", { href: "./#paper=" + p.number, target: "_blank", rel: "noopener" }, h("b", {}, "#" + p.number), p.title))));
+    if (hits.length > 6) list.append(h("li", { class: "note" }, `${fmt(hits.length - 6)} more match. Add another word to narrow it down.`));
+  }
+  q.addEventListener("focus", load);
+  q.addEventListener("input", () => { load(); suggest(); });
+  $("mine").addEventListener("submit", e => { e.preventDefault(); const first = list.querySelector("a"); if (first) window.open(first.href, "_blank", "noopener"); else go(q.value.trim()); });
+}
+
+let D;
+
+function renderLead() {
+  const t = D.totals;
+  $("leadText").textContent = `${fmt(t.reviews)} reviews, two weeks, ten questions. The first one is what most authors ask now. After that, the most surprising come first. A paper's score is the average of its reviewers' ratings, from 1 (strong reject) to 4 (strong accept).`;
+  $("footData").textContent = `Public scores from OpenReview, saved ${D.timeline.length} times from ${dayOf(D.first)} to ${dayOf(D.last)}.`;
+}
+
+function renderChance() {
+  const P = D.past, Y = Object.keys(P.years), w = P.band_width, S = D.scores, last = D.timeline[D.timeline.length - 1];
+  const rate = (y, i) => { const b = P.years[y].bands[i]; return b[0] ? 100 * b[1] / b[0] : 0; };
+  // Mean accepted share over a rank range, weighted by how much of each band it covers.
+  const over = (y, lo, hi) => { let n = 0, a = 0; hi = Math.max(hi, lo + 0.5); P.years[y].bands.forEach((b, i) => { const o = Math.min(hi, (i + 1) * w) - Math.max(lo, i * w); if (o > 0) { n += o; a += o * rate(y, i); } }); return a / n; };
+  const both = (lo, hi) => Y.reduce((a, y) => a + over(y, lo, hi), 0) / Y.length;
+  let flip = 0; while (flip < 100 && both(flip, flip + 5) >= 50) flip += 5;
+  const at = x => { const r = last.ranks[S.findIndex(v => Math.abs(v - x) < 0.01)]; return Math.round(both(r[0], r[1])); };
+  $("chanceHead").textContent = `In past years, about ${Math.round(at(2.6667) / 5) * 5}% of papers ranked like a 2.67 got in. For a 2.33: about ${at(2.3333)}%.`;
+  $("chanceText").replaceChildren(h("strong", {}, `This comes from ICLR 2024 and 2025.`), ` ICLR 2027 may accept more or fewer papers. So this is a guide, not a promise.`);
+  let pick = S.findIndex(v => Math.abs(v - 2.6667) < 0.01), redraw = () => {};
+  const read = () => { const r = last.ranks[pick];
+    $("chanceRead").replaceChildren("A final score of ", h("b", {}, score(S[pick])), ` is in the top ${p1(r[0])} to ${p1(r[1])}. Papers with this rank got in `, ...Y.flatMap((y, k) => [h("b", {}, p0(over(y, r[0], r[1]))), ` of the time in ${y}`, k < Y.length - 1 ? " and " : "."])); };
+  $("chancePick").replaceChildren(...S.map((v, i) => { const b = h("button", { class: "opt num", "data-chance": String(i) }, score(v)); b.addEventListener("click", () => { pick = i; update(); }); return b; }));
+  const update = () => { pressed("[data-chance]", "data-chance", pick); read(); redraw(); };
+  redraw = sized($("chanceChart"), W => {
+    const H = Math.max(250, Math.min(340, W * 0.48)), L = 46, Rt = 16, Tp = 14, B = 44, maxX = 80;
+    const svg = el("svg", { width: W, height: H, role: "img", "aria-label": "Share of papers accepted in past years, by rank after the rebuttal" }, $("chanceChart"));
+    const X = v => L + (W - L - Rt) * v / maxX, Yy = v => Tp + (H - Tp - B) * (1 - v / 100), r = last.ranks[pick];
+    for (const v of [0, 25, 50, 75, 100]) { el("line", { class: v ? "gridline" : "base", x1: L, x2: W - Rt, y1: Yy(v), y2: Yy(v) }, svg); el("text", { x: L - 8, y: Yy(v) + 4, "text-anchor": "end" }, svg, v + "%"); }
+    const x0 = X(Math.min(r[0], maxX)), x1 = X(Math.min(Math.max(r[1], r[0] + 0.5), maxX));
+    el("rect", { class: "zone", x: x0, y: Tp, width: Math.max(3, x1 - x0), height: Yy(0) - Tp }, svg);
+    el("line", { class: "zoneline", x1: x0, x2: Math.max(x0 + 3, x1), y1: Tp, y2: Tp }, svg);
+    const n = Math.round(maxX / w), xs = Array.from({ length: n }, (_, i) => X((i + 0.5) * w));
+    Y.forEach((y, k) => el("polyline", { class: k === Y.length - 1 ? "line-up" : "line-then", points: xs.map((x, i) => `${x},${Yy(rate(y, i))}`).join(" ") }, svg));
+    for (const v of W < 520 ? [0, 20, 40, 60] : [0, 10, 20, 30, 40, 50, 60, 70, 80]) el("text", { x: X(v), y: H - 24, "text-anchor": v === 0 ? "start" : v === maxX ? "end" : "middle" }, svg, v ? `top ${v}%` : "best");
+    el("text", { class: "lab", x: (L + W - Rt) / 2, y: H - 5, "text-anchor": "middle" }, svg, "rank after the rebuttal");
+    crosshair(svg, xs, Tp, Yy(0), i => `Top ${i * w}% to ${(i + 1) * w}% after the rebuttal\n` + Y.map(y => `${y}: ${p0(rate(y, i))} got in`).join("\n"));
+  });
+  update();
+}
+
+function renderShuffle() {
+  const R = D.reshuffle, stay = R.from[0].n, fresh = R.n - stay, max = Math.max(...R.from.map(f => f.n));
+  $("shuffleHead").textContent = `Yes. ${Math.round(100 * fresh / R.n) >= 48 && Math.round(100 * fresh / R.n) <= 52 ? "Half" : p0(100 * fresh / R.n)} of the papers at 2.67 or higher were lower on day one.`;
+  $("shuffleText").replaceChildren(h("strong", {}, `${fmt(fresh)} of ${fmt(R.n)} papers moved up into this group.`), ` Most started at 2.33. Very low papers almost never made it: of ${fmt(D.low.stayed)} papers at 1.67 or lower, only ${fmt(D.low.reached_2_5)} reached 2.5. In total, ${fmt(D.totals.up)} papers went up and ${fmt(D.totals.down)} went down.`);
+  $("shuffleRows").replaceChildren(...R.from.flatMap((f, i) => [h("span", { class: "name" }, !i ? `already at ${f.band}` : f.band.startsWith("below") ? `started ${f.band}` : `started at ${f.band}`),
+    tip(h("div", { class: "bar1" + (i ? "" : " then") }, h("i", { style: `width:${100 * f.n / max}%` })), `${fmt(f.n)} of ${fmt(R.n)} papers that ended at 2.67 or higher\nscore on day one: ${f.band}`),
+    h("span", { class: "v" }, p0(100 * f.n / R.n))]));
+}
+
+function renderRank() {
+  const T = D.timeline, first = T[0], last = T[T.length - 1], S = D.scores;
+  $("rankHead").textContent = `Yes. A 3.0 was in the top ${p0(D.share["3.0"][0])} on day one. Now it is in the top ${p0(D.share["3.0"][1])}.`;
+  $("rankText").replaceChildren(h("strong", {}, `Why? Other papers went up, and weak papers left.`), ` So the same score is worth less than on day one.`);
+  let pick = S.indexOf(2.6667);
+  const read = () => {
+    const a = first.ranks[pick], b = last.ranks[pick], mid = r => (r[0] + r[1]) / 2;
+    $("rankRead").replaceChildren("A score of ", h("b", {}, score(S[pick])), `: top ${p1(a[0])} to ${p1(a[1])} on day one, `, h("b", {}, `top ${p1(b[0])} to ${p1(b[1])}`), ` at the end. About ${Math.round(mid(b) - mid(a))} points lower.`);
+  };
+  $("rankPick").replaceChildren(...S.map((s, i) => { const b = h("button", { class: "opt num", "data-rank": String(i) }, score(s)); b.addEventListener("click", () => { pick = i; update(); }); return b; }));
+  let redraw = () => {};
+  const update = () => { pressed("[data-rank]", "data-rank", pick); read(); redraw(); };
+  redraw = sized($("rankChart"), W => {
+    const H = Math.max(260, Math.min(360, W * 0.5)), L = 46, Rt = 54, Tp = 10, B = 30;
+    const svg = el("svg", { width: W, height: H, role: "img", "aria-label": "Rank of each mean score over time" }, $("rankChart"));
+    const t0 = Date.parse(T[0].t), t1 = Date.parse(last.t), X = t => L + (W - L - Rt) * (Date.parse(t) - t0) / (t1 - t0);
+    const top = 85, Y = v => Tp + (H - Tp - B) * Math.min(v, top) / top;
+    for (const v of [0, 20, 40, 60, 80]) { el("line", { class: "gridline", x1: L, x2: W - Rt, y1: Y(v), y2: Y(v) }, svg); el("text", { x: L - 8, y: Y(v) + 4, "text-anchor": "end" }, svg, v ? `top ${v}%` : "best"); }
+    S.forEach((s, i) => {
+      const up = T.map(p => `${X(p.t)},${Y(p.ranks[i][0])}`), dn = T.map(p => `${X(p.t)},${Y(p.ranks[i][1])}`).reverse();
+      const poly = el("polygon", { class: "band" + (i === pick ? " on" : ""), points: up.concat(dn).join(" ") }, svg);
+      poly.addEventListener("click", () => { pick = i; update(); });
+      const b = last.ranks[i];
+      if (Y(b[1]) - Y(b[0]) > 11 || i === pick) el("text", { class: i === pick ? "strong" : "", x: W - Rt + 6, y: Y((b[0] + b[1]) / 2) + 4 }, svg, score(s));
+    });
+    const n = W < 520 ? 3 : 5;
+    for (let i = 0; i < n; i++) { const t = new Date(t0 + (t1 - t0) * i / (n - 1)).toISOString(); el("text", { x: X(t), y: H - 8, "text-anchor": i === 0 ? "start" : i === n - 1 ? "end" : "middle" }, svg, dayOf(t)); }
+    crosshair(svg, T.map(p => X(p.t)), Tp, H - B, i => `${when(T[i].t)}\nA score of ${score(S[pick])}: top ${p1(T[i].ranks[pick][0])} to ${p1(T[i].ranks[pick][1])}`);
+  });
+  update();
+}
+
+function renderWhen() {
+  const T = D.timeline, last = T[T.length - 1], dl = Date.parse(D.deadline), start = Date.parse(D.first);
+  const total = [...T].reverse().find(p => Date.parse(p.t) <= dl + 1800e3).up;
+  const at = share => { for (let i = 1; i < T.length; i++) if (T[i].up >= share * total) { const a = T[i - 1], b = T[i]; return Date.parse(a.t) + (Date.parse(b.t) - Date.parse(a.t)) * (share * total - a.up) / (b.up - a.up); } };
+  const half = at(0.5), halfHours = Math.round((dl - half) / 3600e3 / 5) * 5, days = Math.round((dl - start) / 86400e3);
+  const before12 = [...T].reverse().find(p => Date.parse(p.t) <= dl - 11.5 * 3600e3), last12 = 100 * (total - before12.up) / total;
+  const week = [...T].reverse().find(p => Date.parse(p.t) <= start + 7 * 86400e3);
+  $("whenHead").textContent = `At the very end. Half of all raises came in the last ${halfHours} hours.`;
+  $("whenText").replaceChildren(h("strong", {}, `After one week, only ${p0(100 * week.up / total)} of the raises had happened.`), ` About ${p0(last12)} came in the last 12 hours. A reminder seems to help: on ${dayOf(D.edits.reminder)}, reviewers edited ${Math.round(D.edits.three_hours_after / D.edits.three_hours_before)} times more reviews within one hour.`);
+  sized($("whenChart"), W => {
+    const H = Math.max(250, Math.min(340, W * 0.48)), L = 52, Rt = 18, Tp = 24, B = 30;
+    const svg = el("svg", { width: W, height: H, role: "img", "aria-label": "Papers with a higher score than on day one, over time" }, $("whenChart"));
+    const t0 = start, t1 = Date.parse(last.t), X = t => L + (W - L - Rt) * (t - t0) / (t1 - t0);
+    const max = Math.ceil(last.up / 2000) * 2000, Y = v => Tp + (H - Tp - B) * (1 - v / max);
+    for (let v = 0; v <= max; v += max / 4) { el("line", { class: v ? "gridline" : "base", x1: L, x2: W - Rt, y1: Y(v), y2: Y(v) }, svg); el("text", { x: L - 8, y: Y(v) + 4, "text-anchor": "end" }, svg, fmt(v)); }
+    const pts = T.map(p => [X(Date.parse(p.t)), Y(p.up)]);
+    el("polygon", { class: "area-up", points: pts.map(p => p.join(",")).concat([`${pts[pts.length - 1][0]},${Y(0)}`, `${pts[0][0]},${Y(0)}`]).join(" ") }, svg);
+    el("polyline", { class: "line-up", points: pts.map(p => p.join(",")).join(" ") }, svg);
+    el("polyline", { class: "line-down", points: T.map(p => `${X(Date.parse(p.t))},${Y(p.down)}`).join(" ") }, svg);
+    el("line", { class: "markline", x1: X(half), x2: X(half), y1: Y(total / 2), y2: Y(0) }, svg);
+    el("line", { class: "markline", x1: L, x2: X(half), y1: Y(total / 2), y2: Y(total / 2) }, svg);
+    el("circle", { class: "dot", cx: X(half), cy: Y(total / 2), r: 5 }, svg);
+    el("text", { class: "strong", x: X(half) - 10, y: Y(total / 2) - 10, "text-anchor": "end" }, svg, "half of all raises");
+    el("line", { class: "markline", x1: X(dl), x2: X(dl), y1: Tp - 6, y2: Y(0) }, svg);
+    el("text", { class: "lab", x: X(dl) - 6, y: Tp - 10, "text-anchor": "end" }, svg, "discussion ends");
+    el("text", { class: "lab", x: X(half) - 10, y: Y(last.down) - 9, "text-anchor": "end" }, svg, `went down: ${fmt(last.down)}`);
+    const n = W < 520 ? 4 : 7;
+    for (let i = 0; i < n; i++) { const t = t0 + (t1 - t0) * i / (n - 1); el("text", { x: X(t), y: H - 8, "text-anchor": i === 0 ? "start" : i === n - 1 ? "end" : "middle" }, svg, dayOf(new Date(t).toISOString())); }
+    crosshair(svg, pts.map(p => p[0]), Tp, Y(0), i => `${when(T[i].t)}\n${fmt(T[i].up)} papers up (${p0(Math.min(100, 100 * T[i].up / total))} of all raises)\n${fmt(T[i].down)} papers down`);
+  });
+}
+
+function renderWhich() {
+  const cell = (own, o) => D.peers.find(p => p.own === own && p.others.join() === o.join()), mv = (own, level) => D.conf_moves.find(m => m.own === own && m.level === level).up;
+  const lo = cell(2, [1, 1]), hi = cell(2, [3, 3]);
+  $("whichHead").textContent = "The ones whose fellow reviewers gave higher scores.";
+  $("whichText").replaceChildren(h("strong", {}, `A reviewer gave a 2. When the other two gave 3 and 3, the 2 went up ${p0(hi.up)} of the time. When they gave 1 and 1: ${p0(lo.up)}.`), ` A 3 almost never became a 4. How sure the reviewer was did not matter.`);
+  let own = 2;
+  const draw = () => {
+    const rows = D.peers.filter(p => p.own === own).sort((a, b) => a.up - b.up), max = Math.max(...D.peers.map(p => p.up));
+    $("whichRows").replaceChildren(...rows.flatMap(r => [h("span", { class: "name" }, `others gave ${r.others[0]} and ${r.others[1]}`),
+      tip(h("div", { class: "bar1" }, h("i", { style: `width:${100 * r.up / (max * 1.05)}%` })), `This reviewer gave ${own}, the others gave ${r.others[0]} and ${r.others[1]}\nThe score went up in ${p1(r.up)} of ${fmt(r.n)} cases`),
+      h("span", { class: "v" }, p1(r.up))]));
+  };
+  document.querySelectorAll("[data-own]").forEach(b => b.addEventListener("click", () => { own = +b.dataset.own; pressed("[data-own]", "data-own", own); draw(); }));
+  draw();
+}
+
+function renderReward() {
+  const S = D.subs, g = S.by_informativeness, rowName = ["Big problems", "Small problems", "No problems"];
+  const names = { by_informativeness: ["Learned little", "Learned something", "Learned a lot"], by_presentation: ["Hard to read", "Takes effort", "Clear"] };
+  $("rewardHead").textContent = "Papers that teach them something new.";
+  $("rewardText").replaceChildren(h("strong", {}, `No problems found, but nothing learned: ${p0(g[2][0].accept)} said accept. Small problems found, but a lot learned: ${p0(g[1][2].accept)}.`), ` Only ${p0(S.top.i.share)} of reviews said the reviewer learned a lot. Clear writing was common (${p0(S.top.p.share)}) and helped the least.`);
+  let key = "by_informativeness";
+  const draw = () => {
+    const G = D.subs[key], kids = [h("span", {}), ...[1, 2, 3].map(c => h("span", { class: "topl" }, names[key][c - 1]))];
+    for (const r of [3, 2, 1]) {
+      kids.push(h("span", { class: "side" }, rowName[r - 1]));
+      for (const c of [1, 2, 3]) { const x = G[r - 1][c - 1];
+        kids.push(tip(h("div", { class: "cell", style: `background: color-mix(in srgb, var(--up) ${Math.round(12 + 0.8 * x.accept)}%, var(--track))` }, h("b", {}, p0(x.accept)), h("span", {}, `${fmt(x.n)} reviews`)),
+          `${rowName[r - 1]}, ${names[key][c - 1].toLowerCase()}\n(soundness ${r}, ${key === "by_presentation" ? "presentation" : "informativeness"} ${c})\n${fmt(x.n)} reviews\n${p1(x.accept)} said accept`)); }
+    }
+    $("rewardGrid").replaceChildren(...kids);
+  };
+  document.querySelectorAll("[data-sub]").forEach(b => b.addEventListener("click", () => { key = b.dataset.sub; pressed("[data-sub]", "data-sub", key); draw(); }));
+  draw();
+}
+
+function renderLuck() {
+  const L = D.luck, share = k => 100 * L.sums.find(x => x.sum === k).n / L.papers, close = share(7) + share(8);
+  $("luckHead").textContent = `A lot. Two reviewers of the same paper agreed on accept or reject ${p0(L.same_side)} of the time. By pure chance: ${p0(L.same_side_chance)}.`;
+  $("luckText").replaceChildren(h("strong", {}, `${p0(close)} of papers were one rating point away from 2.67.`), ` The paper explains only ${p0(L.from_paper)} of the differences in ratings. The rest is reviewers who see the same paper differently, and a rough 4-point scale.`);
+  sized($("luckChart"), W => {
+    const H = Math.max(230, Math.min(300, W * 0.4)), Lf = 44, Rt = 10, Tp = 30, B = 44;
+    const svg = el("svg", { width: W, height: H, role: "img", "aria-label": "Papers with three reviewers, by the sum of their ratings" }, $("luckChart"));
+    const max = Math.ceil(Math.max(...L.sums.map(x => x.n)) / L.papers * 20) * 5, bw = (W - Lf - Rt) / L.sums.length, X = i => Lf + bw * i, Y = v => Tp + (H - Tp - B) * (1 - v / max);
+    for (let v = 0; v <= max; v += max / 5) { el("line", { class: v ? "gridline" : "base", x1: Lf, x2: W - Rt, y1: Y(v), y2: Y(v) }, svg); el("text", { x: Lf - 8, y: Y(v) + 4, "text-anchor": "end" }, svg, Math.round(v) + "%"); }
+    L.sums.forEach((x, i) => { const v = 100 * x.n / L.papers, hot = x.sum === 7 || x.sum === 8;
+      el("rect", { class: "col" + (hot ? " hot" : ""), x: X(i) + 3, y: Y(v), width: bw - 6, height: Y(0) - Y(v), rx: 4 }, svg);
+      if (hot) el("text", { class: "strong", x: X(i) + bw / 2, y: Y(v) - 6, "text-anchor": "middle" }, svg, p0(v));
+      el("text", { x: X(i) + bw / 2, y: H - 24, "text-anchor": "middle" }, svg, String(x.sum)); });
+    const line = X(L.sums.findIndex(x => x.sum === 8));
+    el("line", { class: "markline", x1: line, x2: line, y1: Tp - 12, y2: Y(0) }, svg);
+    el("text", { class: "lab", x: line + 6, y: Tp - 14 }, svg, "2.67 or higher");
+    el("text", { class: "lab", x: (Lf + W - Rt) / 2, y: H - 5, "text-anchor": "middle" }, svg, "the three ratings added together");
+    crosshair(svg, L.sums.map((x, i) => X(i) + bw / 2), Tp, Y(0), i => `Ratings add up to ${L.sums[i].sum} (score ${(L.sums[i].sum / 3).toFixed(2)})\n${fmt(L.sums[i].n)} papers, ${p1(100 * L.sums[i].n / L.papers)}`);
+  });
+}
+
+function renderFourth() {
+  const F = D.fourth, three = F.by_count.find(x => x.reviewers === 3), four = F.by_count.find(x => x.reviewers === 4), max = Math.max(...F.by_count.map(x => x.high));
+  $("fourthHead").textContent = `No. With 3 reviewers, ${p0(three.high)} of papers ended at 2.67 or higher. With 4 reviewers: ${p0(four.high)}.`;
+  $("fourthText").replaceChildren(h("strong", {}, `The papers were just as good. The average rating was the same.`), ` But with three reviewers, 3, 3, 2 is enough for 2.67. With four reviewers, a paper needs 3, 3, 3, 2.`);
+  $("fourthRows").replaceChildren(...F.by_count.flatMap(x => [h("span", { class: "name" }, `${x.reviewers} reviewers`),
+    tip(h("div", { class: "bar1" }, h("i", { style: `width:${100 * x.high / (max * 1.1)}%` })), `${x.reviewers} reviewers: ${fmt(x.n)} papers\n${p1(x.high)} ended at 2.67 or higher\naverage rating ${x.mean.toFixed(2)}`),
+    h("span", { class: "v" }, p1(x.high))]));
+}
+
+const SHORT = [["computer vision", "Vision, audio, language applications"], ["robotics", "Robotics, autonomy, planning"], ["foundation", "Foundation models, LLMs"], ["probabilistic", "Probabilistic methods"],
+  ["infrastructure", "Infrastructure, systems"], ["unsupervised", "Representation learning"], ["graphs", "Graphs, geometry, topology"], ["alignment", "Alignment, fairness, safety, privacy"],
+  ["physical sciences", "Physical sciences applications"], ["transfer", "Transfer, meta, lifelong learning"], ["other topics", "Other topics"], ["time series", "Time series, dynamical systems"],
+  ["interpretability", "Interpretability, explainable AI"], ["neurosymbolic", "Neurosymbolic, hybrid AI"], ["neuroscience", "Neuroscience, cognitive science"]];
+const areaName = n => { const hit = SHORT.find(([k]) => n.includes(k)); return hit ? hit[1] : n.charAt(0).toUpperCase() + n.slice(1); };
+
+function renderArea() {
+  const A = D.areas.map(a => ({ ...a, gain: a.last_high - a.first_high })), by = k => [...A].sort((x, y) => y[k] - x[k]);
+  const ranked = by("last_high"), a = ranked[0], z = ranked[ranked.length - 1];
+  $("areaHead").textContent = `Yes. In the best area, ${p0(a.last_high)} of papers ended at 2.67 or higher. In the lowest area: ${p0(z.last_high)}.`;
+  $("areaText").replaceChildren(h("strong", {}, `Best: ${areaName(a.name)}. Lowest: ${areaName(z.name)}.`), ` The gap got bigger during the rebuttal.`);
+  let key = "last_high";
+  const draw = () => {
+    const w = key === "withdrew", max = w ? 30 : 55, pos = v => `${100 * v / max}%`;
+    $("areaLegend").replaceChildren(...(w ? [h("span", {}, h("i", { class: "key gone" }), "Share of papers withdrawn")]
+      : [h("span", {}, h("i", { class: "key then" }), "At 2.67 or higher on day one"), h("span", {}, h("i", { class: "key now" }), "At the end")]));
+    $("areaRows").replaceChildren(...by(key).map(r => {
+      const line = w ? h("div", { class: "dumb" }, h("i", { class: "w", style: `width:${pos(r.withdrew)}` }))
+        : h("div", { class: "dumb" }, h("i", { class: "link", style: `left:${pos(r.first_high)};width:${pos(r.gain)}` }), h("i", { class: "a", style: `left:${pos(r.first_high)}` }), h("i", { class: "b", style: `left:${pos(r.last_high)}` }));
+      const right = w ? h("span", {}, h("b", {}, p1(r.withdrew))) : key === "gain" ? h("span", {}, h("b", {}, `+${r.gain.toFixed(1)}`), " points") : h("span", {}, p0(r.first_high), " to ", h("b", {}, p0(r.last_high)));
+      return tip(h("div", { class: "arearow" }, h("div", { class: "top" }, h("span", {}, areaName(r.name)), right), line),
+        `${areaName(r.name)}\n${fmt(r.n)} papers\nat 2.67 or higher: ${p1(r.first_high)} on day one, ${p1(r.last_high)} at the end\n${p1(r.up)} of papers went up\n${p1(r.withdrew)} withdrew`);
+    }));
+  };
+  document.querySelectorAll("[data-area]").forEach(b => b.addEventListener("click", () => { key = b.dataset.area; pressed("[data-area]", "data-area", key); draw(); }));
+  draw();
+}
+
+// Column chart over time. cols: [{t (ms), v, hot}], marks: [{t, label, side}].
+function renderAgree() {
+  const S = D.spread, names = ["All reviewers agree", "1 point apart", "2 points apart", "3 points apart"];
+  $("agreeHead").textContent = `Almost not. All reviewers agreed on ${p1(S.day_one[0])} of papers before, and on ${p1(S.final[0])} after.`;
+  $("agreeText").replaceChildren(h("strong", {}, `Scores went up, but reviewers stayed just as far apart.`), ` They moved closer on ${fmt(S.closer)} papers and further apart on ${fmt(S.wider)}.`);
+  $("agreeRows").replaceChildren(...names.flatMap((n, i) => [h("span", { class: "name" }, n),
+    h("div", {}, tip(h("div", { class: "bar1 then", style: "height:9px;margin-bottom:2px" }, h("i", { style: `width:${S.day_one[i] * 1.6}%` })), `${n}\nday one: ${p1(S.day_one[i])} of papers`),
+      tip(h("div", { class: "bar1", style: "height:9px" }, h("i", { style: `width:${S.final[i] * 1.6}%` })), `${n}\nafter the rebuttal: ${p1(S.final[i])} of papers`)),
+    h("span", { class: "v" }, p1(S.final[i]))]));
+}
+
+(async function boot() {
+  try {
+    D = await (await fetch("data/findings.json", { cache: "no-cache" })).json();
+    for (const f of [renderLead, renderChance, renderReward, renderRank, renderShuffle, renderWhich, renderAgree, renderFourth, renderLuck, renderWhen, renderArea]) { try { f(); } catch (e) { console.error(f.name, e); } }
+  } catch (e) {
+    console.error(e);
+    $("leadText").textContent = "The data could not be loaded. Please reload the page.";
+  }
+})();
+</script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "5a79c85b059b4a7da1f198efaf6434c8", "spa": false}'></script>
+</body>
+</html>

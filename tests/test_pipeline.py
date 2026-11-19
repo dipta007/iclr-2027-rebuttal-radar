@@ -10,6 +10,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import build_site
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
+import build_findings
 import build_history
 import download
 
@@ -249,6 +250,20 @@ class Pipeline(unittest.TestCase):
         self.assertEqual(build_site.to_number(2.5), 2.5)
         self.assertIsNone(build_site.to_number("n/a"))
         self.assertIsNone(build_site.to_number(None))
+
+
+class Findings(unittest.TestCase):
+    def test_direction_and_rank(self):
+        self.assertEqual(build_findings.direction([2, 2, 3], [2, 3, 3]), "up")
+        self.assertEqual(build_findings.direction([2, 3], [2, 2]), "down")
+        self.assertEqual(build_findings.direction([1, 4], [2, 3]), "same")
+        self.assertIsNone(build_findings.direction([2, 2], [2, 2, 2]))
+        self.assertEqual(build_findings.top_range([[3.0, 10], [2.5, 30], [2.0, 60]], 2.5), [10.0, 40.0])
+
+    def test_only_numbers_rejects_text(self):
+        build_findings.only_numbers({"areas": [{"name": "a long area name that is allowed because it is a name"}], "first": "2026-11-06T13:54:47+00:00"})
+        with self.assertRaises(AssertionError):
+            build_findings.only_numbers({"note": CANARY * 4})
 
 
 if __name__ == "__main__":
