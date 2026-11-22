@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Findings | ICLR 2027 Rebuttal Radar</title>
-<meta name="description" content="Is your final ICLR 2027 score enough? What past years say, and what 125,732 reviews did during the rebuttal.">
+<meta name="description" content="Is your ICLR 2027 score enough? What past years say, and what 126,413 reviews did during the rebuttal.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://dipta007.github.io/iclr-2027-rebuttal-radar/findings.html">
 <meta property="og:title" content="What the ICLR 2027 rebuttal changed">
-<meta property="og:description" content="Is your final score enough? What past years say, how much rank an unchanged score lost, and what 125,732 reviews did in two weeks.">
+<meta property="og:description" content="Is your current score enough? What past years say, how much rank an unchanged score lost, and what 126,413 reviews did in two weeks.">
 <meta property="og:image" content="https://dipta007.github.io/iclr-2027-rebuttal-radar/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -167,10 +167,10 @@ footer { margin-top: 64px; padding-top: 18px; border-top: 2px solid var(--ink); 
   <section class="group" id="findings">
 
     <article class="rq" id="chance">
-      <p class="ask">Is my final score enough?</p>
+      <p class="ask">Is my current score enough?</p>
       <h3 id="chanceHead"></h3>
       <p class="so" id="chanceText"></p>
-      <div class="controls" role="group" aria-label="Pick your final score"><span>Pick your final score:</span><span id="chancePick" class="picks"></span></div>
+      <div class="controls" role="group" aria-label="Pick your score"><span>Pick your score:</span><span id="chancePick" class="picks"></span></div>
       <p class="readout" id="chanceRead" aria-live="polite"></p>
       <div class="legend"><span><i class="key" style="background:var(--then)"></i>ICLR 2024</span><span><i class="key"></i>ICLR 2025</span><span><i class="key ask"></i>Where your score ranks this year</span></div>
       <div class="chart" id="chanceChart"></div>
@@ -204,7 +204,7 @@ footer { margin-top: 64px; padding-top: 18px; border-top: 2px solid var(--ink); 
       <h3 id="shuffleHead"></h3>
       <p class="so" id="shuffleText"></p>
       <div class="rows" id="shuffleRows"></div>
-      <p class="how">Where the papers that ended at 2.67 or higher were on day one.</p>
+      <p class="how">Where the papers now at 2.67 or higher were on day one.</p>
     </article>
 
     <article class="rq" id="which">
@@ -258,7 +258,7 @@ footer { margin-top: 64px; padding-top: 18px; border-top: 2px solid var(--ink); 
       <h3 id="areaHead"></h3>
       <p class="so" id="areaText"></p>
       <div class="controls" role="group" aria-label="Sort areas"><span>Sort by:</span>
-        <button class="opt" data-area="last_high" aria-pressed="true">At the end</button>
+        <button class="opt" data-area="last_high" aria-pressed="true">Now</button>
         <button class="opt" data-area="gain" aria-pressed="false">Growth</button>
         <button class="opt" data-area="withdrew" aria-pressed="false">Withdrawn papers</button>
       </div>
@@ -377,7 +377,7 @@ function renderChance() {
   $("chanceText").replaceChildren(h("strong", {}, `This comes from ICLR 2024 and 2025.`), ` ICLR 2027 may accept more or fewer papers. So this is a guide, not a promise.`);
   let pick = S.findIndex(v => Math.abs(v - 2.6667) < 0.01), redraw = () => {};
   const read = () => { const r = last.ranks[pick];
-    $("chanceRead").replaceChildren("A final score of ", h("b", {}, score(S[pick])), ` is in the top ${p1(r[0])} to ${p1(r[1])}. Papers with this rank got in `, ...Y.flatMap((y, k) => [h("b", {}, p0(over(y, r[0], r[1]))), ` of the time in ${y}`, k < Y.length - 1 ? " and " : "."])); };
+    $("chanceRead").replaceChildren("A score of ", h("b", {}, score(S[pick])), ` is in the top ${p1(r[0])} to ${p1(r[1])}. Papers with this rank got in `, ...Y.flatMap((y, k) => [h("b", {}, p0(over(y, r[0], r[1]))), ` of the time in ${y}`, k < Y.length - 1 ? " and " : "."])); };
   $("chancePick").replaceChildren(...S.map((v, i) => { const b = h("button", { class: "opt num", "data-chance": String(i) }, score(v)); b.addEventListener("click", () => { pick = i; update(); }); return b; }));
   const update = () => { pressed("[data-chance]", "data-chance", pick); read(); redraw(); };
   redraw = sized($("chanceChart"), W => {
@@ -402,7 +402,7 @@ function renderShuffle() {
   $("shuffleHead").textContent = `Yes. ${Math.round(100 * fresh / R.n) >= 48 && Math.round(100 * fresh / R.n) <= 52 ? "Half" : p0(100 * fresh / R.n)} of the papers at 2.67 or higher were lower on day one.`;
   $("shuffleText").replaceChildren(h("strong", {}, `${fmt(fresh)} of ${fmt(R.n)} papers moved up into this group.`), ` Most started at 2.33. Very low papers almost never made it: of ${fmt(D.low.stayed)} papers at 1.67 or lower, only ${fmt(D.low.reached_2_5)} reached 2.5. In total, ${fmt(D.totals.up)} papers went up and ${fmt(D.totals.down)} went down.`);
   $("shuffleRows").replaceChildren(...R.from.flatMap((f, i) => [h("span", { class: "name" }, !i ? `already at ${f.band}` : f.band.startsWith("below") ? `started ${f.band}` : `started at ${f.band}`),
-    tip(h("div", { class: "bar1" + (i ? "" : " then") }, h("i", { style: `width:${100 * f.n / max}%` })), `${fmt(f.n)} of ${fmt(R.n)} papers that ended at 2.67 or higher\nscore on day one: ${f.band}`),
+    tip(h("div", { class: "bar1" + (i ? "" : " then") }, h("i", { style: `width:${100 * f.n / max}%` })), `${fmt(f.n)} of ${fmt(R.n)} papers now at 2.67 or higher\nscore on day one: ${f.band}`),
     h("span", { class: "v" }, p0(100 * f.n / R.n))]));
 }
 
@@ -413,7 +413,7 @@ function renderRank() {
   let pick = S.indexOf(2.6667);
   const read = () => {
     const a = first.ranks[pick], b = last.ranks[pick], mid = r => (r[0] + r[1]) / 2;
-    $("rankRead").replaceChildren("A score of ", h("b", {}, score(S[pick])), `: top ${p1(a[0])} to ${p1(a[1])} on day one, `, h("b", {}, `top ${p1(b[0])} to ${p1(b[1])}`), ` at the end. About ${Math.round(mid(b) - mid(a))} points lower.`);
+    $("rankRead").replaceChildren("A score of ", h("b", {}, score(S[pick])), `: top ${p1(a[0])} to ${p1(a[1])} on day one, `, h("b", {}, `top ${p1(b[0])} to ${p1(b[1])}`), ` now. About ${Math.round(mid(b) - mid(a))} points lower.`);
   };
   $("rankPick").replaceChildren(...S.map((s, i) => { const b = h("button", { class: "opt num", "data-rank": String(i) }, score(s)); b.addEventListener("click", () => { pick = i; update(); }); return b; }));
   let redraw = () => {};
@@ -529,10 +529,10 @@ function renderLuck() {
 
 function renderFourth() {
   const F = D.fourth, three = F.by_count.find(x => x.reviewers === 3), four = F.by_count.find(x => x.reviewers === 4), max = Math.max(...F.by_count.map(x => x.high));
-  $("fourthHead").textContent = `No. With 3 reviewers, ${p0(three.high)} of papers ended at 2.67 or higher. With 4 reviewers: ${p0(four.high)}.`;
+  $("fourthHead").textContent = `No. With 3 reviewers, ${p0(three.high)} of papers are now at 2.67 or higher. With 4 reviewers: ${p0(four.high)}.`;
   $("fourthText").replaceChildren(h("strong", {}, `The papers were just as good. The average rating was the same.`), ` But with three reviewers, 3, 3, 2 is enough for 2.67. With four reviewers, a paper needs 3, 3, 3, 2.`);
   $("fourthRows").replaceChildren(...F.by_count.flatMap(x => [h("span", { class: "name" }, `${x.reviewers} reviewers`),
-    tip(h("div", { class: "bar1" }, h("i", { style: `width:${100 * x.high / (max * 1.1)}%` })), `${x.reviewers} reviewers: ${fmt(x.n)} papers\n${p1(x.high)} ended at 2.67 or higher\naverage rating ${x.mean.toFixed(2)}`),
+    tip(h("div", { class: "bar1" }, h("i", { style: `width:${100 * x.high / (max * 1.1)}%` })), `${x.reviewers} reviewers: ${fmt(x.n)} papers\n${p1(x.high)} now at 2.67 or higher\naverage rating ${x.mean.toFixed(2)}`),
     h("span", { class: "v" }, p1(x.high))]));
 }
 
@@ -545,19 +545,19 @@ const areaName = n => { const hit = SHORT.find(([k]) => n.includes(k)); return h
 function renderArea() {
   const A = D.areas.map(a => ({ ...a, gain: a.last_high - a.first_high })), by = k => [...A].sort((x, y) => y[k] - x[k]);
   const ranked = by("last_high"), a = ranked[0], z = ranked[ranked.length - 1];
-  $("areaHead").textContent = `Yes. In the best area, ${p0(a.last_high)} of papers ended at 2.67 or higher. In the lowest area: ${p0(z.last_high)}.`;
+  $("areaHead").textContent = `Yes. In the best area, ${p0(a.last_high)} of papers are now at 2.67 or higher. In the lowest area: ${p0(z.last_high)}.`;
   $("areaText").replaceChildren(h("strong", {}, `Best: ${areaName(a.name)}. Lowest: ${areaName(z.name)}.`), ` The gap got bigger during the rebuttal.`);
   let key = "last_high";
   const draw = () => {
     const w = key === "withdrew", max = w ? 30 : 55, pos = v => `${100 * v / max}%`;
     $("areaLegend").replaceChildren(...(w ? [h("span", {}, h("i", { class: "key gone" }), "Share of papers withdrawn")]
-      : [h("span", {}, h("i", { class: "key then" }), "At 2.67 or higher on day one"), h("span", {}, h("i", { class: "key now" }), "At the end")]));
+      : [h("span", {}, h("i", { class: "key then" }), "At 2.67 or higher on day one"), h("span", {}, h("i", { class: "key now" }), "Now")]));
     $("areaRows").replaceChildren(...by(key).map(r => {
       const line = w ? h("div", { class: "dumb" }, h("i", { class: "w", style: `width:${pos(r.withdrew)}` }))
         : h("div", { class: "dumb" }, h("i", { class: "link", style: `left:${pos(r.first_high)};width:${pos(r.gain)}` }), h("i", { class: "a", style: `left:${pos(r.first_high)}` }), h("i", { class: "b", style: `left:${pos(r.last_high)}` }));
       const right = w ? h("span", {}, h("b", {}, p1(r.withdrew))) : key === "gain" ? h("span", {}, h("b", {}, `+${r.gain.toFixed(1)}`), " points") : h("span", {}, p0(r.first_high), " to ", h("b", {}, p0(r.last_high)));
       return tip(h("div", { class: "arearow" }, h("div", { class: "top" }, h("span", {}, areaName(r.name)), right), line),
-        `${areaName(r.name)}\n${fmt(r.n)} papers\nat 2.67 or higher: ${p1(r.first_high)} on day one, ${p1(r.last_high)} at the end\n${p1(r.up)} of papers went up\n${p1(r.withdrew)} withdrew`);
+        `${areaName(r.name)}\n${fmt(r.n)} papers\nat 2.67 or higher: ${p1(r.first_high)} on day one, ${p1(r.last_high)} now\n${p1(r.up)} of papers went up\n${p1(r.withdrew)} withdrew`);
     }));
   };
   document.querySelectorAll("[data-area]").forEach(b => b.addEventListener("click", () => { key = b.dataset.area; pressed("[data-area]", "data-area", key); draw(); }));

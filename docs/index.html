@@ -8,7 +8,7 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://dipta007.github.io/iclr-2027-rebuttal-radar/">
 <meta property="og:title" content="ICLR 2027 Rebuttal Radar">
-<meta property="og:description" content="Where did your paper end up after the rebuttal? See your rank on day one and at the end, and how papers at that rank did in past years.">
+<meta property="og:description" content="Where did your paper end up after the rebuttal? See your rank on day one and now, and how papers at that rank did in past years.">
 <meta property="og:image" content="https://dipta007.github.io/iclr-2027-rebuttal-radar/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -168,7 +168,7 @@ footer { margin-top: 64px; padding-top: 18px; border-top: 2px solid var(--ink); 
 
   <section id="pulse">
     <h2>What moved during the rebuttal</h2>
-    <p class="how">Each number counts papers whose final review scores differ from <span class="first-date">the first day</span>.</p>
+    <p class="how">Each number counts papers whose current review scores differ from <span class="first-date">the first day</span>.</p>
     <div class="tiles" id="tiles"></div>
     <p class="small" id="pulseNote"></p>
     <div class="card chart" id="trendCard" hidden>
@@ -192,21 +192,21 @@ footer { margin-top: 64px; padding-top: 18px; border-top: 2px solid var(--ink); 
   </section>
 
   <section id="dist">
-    <h2>Score distribution, day one and final</h2>
-    <p class="how">Each bar is the share of papers with that mean score at the end. The thin line across each bar marks the share on <span class="first-date">the first day</span>. A bar above its line means that score became more common.</p>
+    <h2>Score distribution, day one and now</h2>
+    <p class="how">Each bar is the share of papers with that mean score now. The thin line across each bar marks the share on <span class="first-date">the first day</span>. A bar above its line means that score became more common.</p>
     <div class="card chart">
-      <div class="legend"><span><i class="key"></i>Final</span><span><i class="key line"></i><span class="first-date">First snapshot</span></span></div>
+      <div class="legend"><span><i class="key"></i>Now</span><span><i class="key line"></i><span class="first-date">First snapshot</span></span></div>
       <div id="distChart"></div>
     </div>
     <div class="card wrap">
       <h3>Mean score needed to be in the top share of papers</h3>
-      <table><thead><tr><th>Top share</th><th class="r"><span class="first-date">First</span></th><th class="r">Final</th></tr></thead><tbody id="cutRows"></tbody></table>
+      <table><thead><tr><th>Top share</th><th class="r"><span class="first-date">First</span></th><th class="r">Now</th></tr></thead><tbody id="cutRows"></tbody></table>
     </div>
   </section>
 
   <section id="which">
     <h2>Which scores moved</h2>
-    <p class="how">Read each row from left to right: of the reviews that gave this score at the start, how many gave each score at the end.</p>
+    <p class="how">Read each row from left to right: of the reviews that gave this score at the start, how many give each score now.</p>
     <div class="card wrap"><table class="matrix" id="matrix"></table></div>
   </section>
 
@@ -226,7 +226,7 @@ footer { margin-top: 64px; padding-top: 18px; border-top: 2px solid var(--ink); 
     <p><strong>Who made this.</strong> <a href="https://roydipta.com" target="_blank" rel="noopener noreferrer">Shubhashis Roy Dipta</a>, a PhD student who also went through this rebuttal. More of my work: <a href="https://roydipta.com" target="_blank" rel="noopener noreferrer">portfolio</a>, <a href="https://notes.roydipta.com" target="_blank" rel="noopener noreferrer">notes</a>, <a href="https://x.com/iamdipta007" target="_blank" rel="noopener noreferrer">X</a>, <a href="https://scholar.google.com/citations?hl=en&amp;user=j2ElsNIAAAAJ&amp;view_op=list_works&amp;sortby=pubdate" target="_blank" rel="noopener noreferrer">Scholar</a>.</p>
     <p><strong>Credit.</strong> This site is built on <a href="https://github.com/shiqiangw/iclr-2027-scores" target="_blank" rel="noopener noreferrer">iclr-2027-scores</a> by shiqiangw, who made the original <a href="https://shiqiangw.github.io/iclr-2027-scores/" target="_blank" rel="noopener noreferrer">ICLR 2027 Scores</a> page, the data pipeline, and the first snapshot. The rebuttal sections were added in this <a href="https://github.com/dipta007/iclr-2027-rebuttal-radar" target="_blank" rel="noopener noreferrer">fork</a>.</p>
     <p><strong>What is counted.</strong> Only official reviews and their overall rating. <span id="footCounts"></span> Withdrawn and desk-rejected papers are not listed. The page shows paper titles, numeric scores, and OpenReview links only. Visits are counted with Cloudflare Web Analytics, which uses no cookies. The paper you look up is not part of that count.</p>
-    <p><strong>Limits.</strong> A changed score is found by comparing each paper's sorted scores, so two opposite changes on one paper can hide each other. Past-year rates describe what happened to similar papers. They are not a prediction for any paper. Data comes from the OpenReview API. It was updated every 12 hours until the rebuttal period ended. Past-year numbers are built from the public data of <a href="https://github.com/papercopilot/iclr-insights" target="_blank" rel="noopener noreferrer">Paper Copilot</a>.</p>
+    <p><strong>Limits.</strong> A changed score is found by comparing each paper's sorted scores, so two opposite changes on one paper can hide each other. Past-year rates describe what happened to similar papers. They are not a prediction for any paper. Data comes from the OpenReview API. It updates every 12 hours. Past-year numbers are built from the public data of <a href="https://github.com/papercopilot/iclr-insights" target="_blank" rel="noopener noreferrer">Paper Copilot</a>.</p>
   </footer>
 </main>
 <div id="tip" role="status"></div>
@@ -286,7 +286,7 @@ let SITE, FIRST, LAST, PAPERS = [], HISTORY = null, FINDINGS = null, SHOWN = nul
 
 function renderHeader() {
   const taken = new Date(LAST.taken_at);
-  $("updated").replaceChildren(`Final scores as of ${stamp(taken)}, your time.`, h("br"), "The rebuttal period has ended, so updates have stopped.");
+  $("updated").replaceChildren(`Scores as of ${stamp(taken)}, your time.`, h("br"), "The rebuttal has ended, but reviewers can still change scores during the closed discussion. This page updates every 12 hours.");
   document.querySelectorAll(".first-date").forEach(n => { n.textContent = day(FIRST.taken_at); });
 }
 
@@ -340,7 +340,7 @@ function barRows(host, rows, max) {
 
 function renderExpect() {
   const m = LAST.movement, nowShare = m.reviews_paired ? m.reviews_raised / m.reviews_paired : 0;
-  const rows = [["ICLR 2027, final", nowShare, `${pc(nowShare, 2)} (${fmt(m.reviews_raised)} reviews)`, "now"]];
+  const rows = [["ICLR 2027, now", nowShare, `${pc(nowShare, 2)} (${fmt(m.reviews_raised)} reviews)`, "now"]];
   if (HISTORY) for (const y of Object.keys(HISTORY.years)) {
     const d = HISTORY.years[y], s = d.reviews_raised / d.reviews_paired;
     rows.push([`ICLR ${y}, final`, s, pc(s)]);
@@ -358,7 +358,7 @@ function renderDist() {
   const now = thirds(LAST.mean_distribution), then = thirds(FIRST.mean_distribution);
   const w = Math.max(300, $("distChart").clientWidth), narrow = w < 520, ht = 300, m = { t: 22, r: 8, b: 40, l: 40 }, iw = w - m.l - m.r, ih = ht - m.t - m.b;
   const top = Math.ceil(Math.max(...now, ...then) * 10) / 10, Y = p => m.t + ih * (1 - p / top);
-  const svg = el("svg", { viewBox: `0 0 ${w} ${ht}`, role: "img", "aria-label": "Share of papers at each mean score, first snapshot and final" });
+  const svg = el("svg", { viewBox: `0 0 ${w} ${ht}`, role: "img", "aria-label": "Share of papers at each mean score, first snapshot and now" });
   for (let q = 0; q <= top + 1e-9; q += .1) {
     el("line", { x1: m.l, x2: w - m.r, y1: Y(q), y2: Y(q), class: q ? "gridline" : "base" }, svg);
     el("text", { x: m.l - 6, y: Y(q) + 4, "text-anchor": "end" }, svg, Math.round(q * 100) + "%");
@@ -367,7 +367,7 @@ function renderDist() {
   now.forEach((p, i) => {
     const cx = m.l + slot * (i + .5), x = cx - bw / 2, y = Y(p), base = Y(0), v = 1 + i / 3, r = Math.min(4, base - y);
     const hit = el("rect", { class: "hit", x: m.l + slot * i, y: m.t, width: slot, height: ih }, svg);
-    tip(hit, `Mean near ${v.toFixed(2)}: ${pc(p)} of papers at the end, ${pc(then[i])} on ${day(FIRST.taken_at)}`);
+    tip(hit, `Mean near ${v.toFixed(2)}: ${pc(p)} of papers now, ${pc(then[i])} on ${day(FIRST.taken_at)}`);
     if (p > 0) el("path", { class: "bar", "pointer-events": "none", d: `M${x},${base}V${y + r}Q${x},${y} ${x + r},${y}H${x + bw - r}Q${x + bw},${y} ${x + bw},${y + r}V${base}Z` }, svg);
     el("line", { class: "thenmark", "pointer-events": "none", x1: x - 5, x2: x + bw + 5, y1: Y(then[i]), y2: Y(then[i]) }, svg);
     if (p >= .02) el("text", { class: "lab", x: cx, y: Math.min(y, Y(then[i])) - 7, "text-anchor": "middle" }, svg, pc(p, narrow ? 0 : 1));
@@ -381,7 +381,7 @@ function renderDist() {
 
 function renderWhich() {
   const g = LAST.movement.grid, t = $("matrix");
-  const head = h("tr", {}, h("th", {}, "Score at start"), ...[1, 2, 3, 4].map(c => h("th", {}, "final " + c)));
+  const head = h("tr", {}, h("th", {}, "Score at start"), ...[1, 2, 3, 4].map(c => h("th", {}, "now " + c)));
   const body = g.map((row, i) => {
     const total = row.reduce((a, b) => a + b, 0) || 1;
     return h("tr", {}, h("th", {}, "was " + (i + 1)), ...row.map((c, j) => {
@@ -462,7 +462,7 @@ function strip(first, now, whatIf) {
   };
   if (first) seg(first, y - 11, 5, "var(--then)");
   seg(now, y, bh, "var(--up)");
-  anchor(now, `Final: ${range(now)}`, y - 18, "lab");
+  anchor(now, `Now: ${range(now)}`, y - 18, "lab");
   if (whatIf) {
     seg(whatIf, y + 2, bh - 4, "none", { stroke: "var(--ink)", "stroke-width": 1.5, "stroke-dasharray": "4 3" });
     anchor(whatIf, "Dashed: where your day-one scores would rank now", y + bh + 42, "");
@@ -482,7 +482,7 @@ function showPaper(p) {
     h("h3", {}, h("a", { href: "https://openreview.net/forum?id=" + encodeURIComponent(p.forum), target: "_blank", rel: "noopener noreferrer" }, `#${p.number} ${p.title}`)),
     h("div", { class: "scores" },
       first ? h("span", {}, `${day(FIRST.taken_at)}: `, ...chips(p.first), ` mean `, h("strong", { class: "num" }, firstMean.toFixed(2))) : null,
-      h("span", {}, "Final: ", ...chips(p.ratings), " mean ", h("strong", { class: "num" }, p.mean.toFixed(2)), p.change ? h("span", {}, " ", arrow(p.change), signed(p.change)) : null)),
+      h("span", {}, "Now: ", ...chips(p.ratings), " mean ", h("strong", { class: "num" }, p.mean.toFixed(2)), p.change ? h("span", {}, " ", arrow(p.change), signed(p.change)) : null)),
     strip(first, now, stayed),
     h("p", { class: "small" }, "The bar is every rated paper, best on the left. ", first ? `The thin gray line is the rank on ${day(FIRST.taken_at)} (${range(first)}). ` : "",
       now.tied > 1 ? `${fmt(now.tied - 1)} other papers have the same mean, so the rank is a range.` : ""),
@@ -508,7 +508,7 @@ function story(p, firstMean, first, now, stayed) {
   if (!FINDINGS) return h("p", { class: "small" }, "The paper-by-paper answers are not available right now.");
   const F = FINDINGS, items = [], qa = (q, ...a) => items.push(h("div", { class: "qa" }, h("p", { class: "ask" }, q), h("p", {}, ...a)));
   const mid = r => (r.lo + r.hi) / 2, B = t => h("strong", {}, t), years = Object.keys(F.past.years);
-  qa("Is my final score enough?", "Your paper ends in the ", B(range(now)), ". Papers that ended at this rank were accepted ",
+  qa("Is my current score enough?", "Your paper is now in the ", B(range(now)), ". Papers that ended at this rank were accepted ",
     ...years.flatMap((y, k) => [B(pc(pastShare(y, now.lo, now.hi), 0)), ` of the time in ${y}`, k < years.length - 1 ? " and " : ". "]),
     "This compares ranks with past years. It is not a prediction.");
   if (first) {
@@ -516,12 +516,12 @@ function story(p, firstMean, first, now, stayed) {
       qa("What was the score change worth?", `With your day-one scores, you would now be in the ${range(stayed)}. `,
         d > 0 ? B(`The raise is worth about ${d} rank points.`) : B(`The drop cost about ${-d} rank points.`)); }
     else { const d = Math.round(mid(now) - mid(first));
-      qa("My score did not move. Did I lose rank?", d > 0 ? B(`Yes, about ${d} points.`) : B("No."), ` You started in the ${range(first)} and ended in the ${range(now)}. Other papers went up, and weak papers left.`); }
+      qa("My score did not move. Did I lose rank?", d > 0 ? B(`Yes, about ${d} points.`) : B("No."), ` You started in the ${range(first)} and are now in the ${range(now)}. Other papers went up, and weak papers left.`); }
     const row = F.odds.find(o => Math.abs(o.score - firstMean) < 0.006);
     if (row) {
       const up = row.up / row.stayed, same = 1 - (row.up + row.down) / row.stayed, kind = { up: "went up", down: "went down", same: "did not move" }[p.kind];
       qa("Was that normal?", `Of the papers that started at ${firstMean.toFixed(2)}, `, B(`${pc(up, 0)} went up`), ` and ${pc(same, 0)} did not move. `, kind ? `Yours ${kind}. ` : "",
-        `${pc(row.high / row.stayed, 0)} of them ended at 2.67 or higher. Yours ${p.mean >= 2.666 ? "did" : "did not"}.`);
+        `${pc(row.high / row.stayed, 0)} of them are now at 2.67 or higher. Yours ${p.mean >= 2.666 ? "is" : "is not"}.`);
     }
     if (p.first.length === 3 && p.ratings.length === 3) {
       const changed = moves(p.first, p.ratings), peer = own => { const o = [...p.first]; o.splice(o.indexOf(own), 1); return F.peers.find(x => x.own === own && x.others.join() === o.sort((a, b) => a - b).join()); };

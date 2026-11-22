@@ -18,6 +18,7 @@ if [ -z "$DRY" ]; then
   export OPENREVIEW_USERNAME="$EMAIL" OPENREVIEW_PASSWORD="$PASSWORD"
   "${PY[@]}" download.py --new
   "${PY[@]}" build_site.py
+  "${PY[@]}" tools/build_findings.py "$(ls -d snapshots/*/ | sort | tail -1)" state/snapshots previous docs/data/findings.json
   "${PY[@]}" tests/test_pipeline.py
 fi
 

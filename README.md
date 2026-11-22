@@ -1,6 +1,6 @@
 # ICLR 2027 Rebuttal Radar
 
-See how ICLR 2027 review scores moved during the rebuttal, and where your paper ended up. The rebuttal is over, so the data is final.
+See how ICLR 2027 review scores moved during the rebuttal, and where your paper stands. The rebuttal is over, but reviewers can still change scores during the closed discussion, so the site still updates every 12 hours.
 
 Site: https://dipta007.github.io/iclr-2027-rebuttal-radar/
 
@@ -10,11 +10,11 @@ This project is a fork of [iclr-2027-scores](https://github.com/shiqiangw/iclr-2
 
 ## What the page shows
 
-- **Where did my paper end up?** Type a paper number or title. You get the day-one and final scores, the rank as a range, and short answers for that paper: how papers at the same final rank did in ICLR 2024 and 2025, what the score change was worth, and whether that was normal.
+- **Where did my paper end up?** Type a paper number or title. You get the day-one and current scores, the rank as a range, and short answers for that paper: how papers at the same rank did in ICLR 2024 and 2025, what the score change was worth, and whether that was normal.
 - **What moved.** How many papers went up, went down, got a different number of reviews, or left.
 - **How much moved, compared with past years.** The share of raised review scores, next to past years.
 - **Papers that moved.** A searchable list with scores before and after.
-- **Score distribution, day one and final**, and the cut-offs for the top 5, 10, 25, and 50 percent.
+- **Score distribution, day one and now**, and the cut-offs for the top 5, 10, 25, and 50 percent.
 - **Which scores moved**, and which score groups lost the most papers.
 - **All papers**, ranked by mean score.
 
@@ -36,7 +36,7 @@ Raw downloads hold review text. They stay in `snapshots/`, which git ignores. Pe
 
 ## Refresh every 12 hours
 
-The schedule was stopped when the rebuttal ended. The steps below still work for a manual run.
+A launchd job runs the refresh at 7:10 and 19:10 local time. It also rebuilds the findings data.
 
 ```sh
 ./refresh.sh
@@ -68,10 +68,10 @@ uv run --no-project python tools/build_history.py previous docs/data/history.jso
 
 ## Findings page
 
-`docs/findings.html` answers ten questions about the rebuttal, sorted with the most surprising first. Its data, `docs/data/findings.json`, holds totals only: no paper and no reviewer is listed. To rebuild it from the final raw snapshot, the per-snapshot summaries, and the past-year files (see the next section):
+`docs/findings.html` answers ten questions about the rebuttal, sorted with the most surprising first. Its data, `docs/data/findings.json`, holds totals only: no paper and no reviewer is listed. To rebuild it from the newest raw snapshot, the per-snapshot summaries, and the past-year files (see the next section):
 
 ```sh
-uv run --no-project python tools/build_findings.py snapshots/<final snapshot id> state/snapshots previous docs/data/findings.json
+uv run --no-project python tools/build_findings.py snapshots/<newest snapshot id> state/snapshots previous docs/data/findings.json
 ```
 
 ## Tests
